@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexusMultiVendor Enterprise Suite v2026 Pro</title>
+    <title>NexusMultiVendor Enterprise Suite v2026 Pro - PKR Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -55,8 +55,7 @@
 
                     <div>
                         <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-wider">Workspace Tenant Partition</label>
-                        <select id="vendor-context-selector" onchange="switchContext(this.value)" class="w-full bg-slate-900 text-xs text-white border border-slate-700 rounded-lg p-2 focus:outline-none focus:border-emerald-500 cursor-pointer">
-                            <option value="all">🌐 Global Portal Operator</option>
+                        <select id="vendor-context-selector" onchange="switchContext(this.value)" class="w-full bg-slate-900 text-xs text-white border border-slate-700 rounded-lg p-2 focus:outline-none focus:border-emerald-500 cursor-pointer"></option>
                         </select>
                     </div>
                 </div>
@@ -122,14 +121,14 @@
                             <div class="p-2 bg-blue-50 text-blue-600 rounded-lg"><i class="fa-solid fa-boxes-stacked text-base"></i></div>
                         </div>
                         <div class="bg-white p-4 rounded-xl shadow-xs border border-slate-200 flex items-center justify-between">
-                            <div><p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Book Capital Base</p><h3 id="card-gross-capital" class="text-xl md:text-2xl font-black mt-1 text-emerald-700">$0.00</h3></div>
+                            <div><p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Book Capital Base</p><h3 id="card-gross-capital" class="text-xl md:text-2xl font-black mt-1 text-emerald-700">PKR 0</h3></div>
                             <div class="p-2 bg-teal-50 text-teal-600 rounded-lg"><i class="fa-solid fa-circle-dollar-to-slot text-base"></i></div>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 bg-slate-950 text-white p-5 rounded-xl border border-slate-800 shadow-lg font-mono">
-                        <div class="p-1"><span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Capital Infusions</span><span id="metric-liquid-infusion" class="text-sm md:text-base font-bold text-indigo-400">$0.00</span></div>
-                        <div class="p-1"><span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Est Tax Provisions</span><span id="metric-tax-provision" class="text-sm md:text-base font-bold text-amber-400">$0.00</span></div>
+                        <div class="p-1"><span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Capital Infusions</span><span id="metric-liquid-infusion" class="text-sm md:text-base font-bold text-indigo-400">PKR 0.00</span></div>
+                        <div class="p-1"><span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Est Tax Provisions</span><span id="metric-tax-provision" class="text-sm md:text-base font-bold text-amber-400">PKR 0.00</span></div>
                         <div class="p-1"><span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Velocity Turnover</span><span id="metric-turnover-index" class="text-sm md:text-base font-bold text-emerald-400">0.00x</span></div>
                         <div class="p-1"><span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Dead Risk Ratio</span><span id="metric-dead-risk-index" class="text-sm md:text-base font-bold text-rose-400">0.0%</span></div>
                     </div>
@@ -143,14 +142,19 @@
                             <div class="flex items-center gap-2">
                                 <span class="text-[10px] font-bold text-slate-400 uppercase">Axis Parameter:</span>
                                 <select id="chart-metric-dimension" onchange="refreshApplicationState()" class="bg-slate-50 border border-slate-200 text-xs font-semibold rounded px-2 py-1 text-slate-700 outline-none">
-                                    <option value="inventory-value">Inventory Capital Valuation ($)</option>
+                                    <option value="inventory-value">Inventory Capital Valuation (PKR)</option>
                                     <option value="inventory-qty">Physical Unit Volumes (Count)</option>
-                                    <option value="financial-infusion">Direct Upstream Inflow Aggregates ($)</option>
-                                    <option value="dead-valuation">Dead Stock Write-off Exposure ($)</option>
+                                    <option value="financial-infusion">Direct Upstream Inflow Aggregates (PKR)</option>
+                                    <option value="dead-valuation">Dead Stock Write-off Exposure (PKR)</option>
                                 </select>
                             </div>
                         </div>
-                        <div id="dynamic-chart-canvas" class="space-y-3 pt-2"></div>
+                        <div id="dynamic-chart-canvas" class="space-y-3 pt-2">
+                            <div class="animate-pulse space-y-2">
+                                <div class="h-3 bg-slate-200 rounded w-1/3"></div>
+                                <div class="h-2 bg-slate-100 rounded w-full"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -165,7 +169,7 @@
                         </div>
                     </div>
                     <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left min-w-[600px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">Supplier ID</th><th class="px-4 py-2.5">Legal Identity</th><th class="px-4 py-2.5">Communications Gateway</th><th class="px-4 py-2.5">Node Jurisdiction</th><th class="px-4 py-2.5">Sync Status</th></tr></thead><tbody id="table-body-vendors" class="divide-y divide-slate-100"></tbody></table>
+                        <table class="w-full text-left min-w-[600px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">Supplier ID (PK)</th><th class="px-4 py-2.5">Legal Identity</th><th class="px-4 py-2.5">Communications Gateway</th><th class="px-4 py-2.5">Node Jurisdiction</th><th class="px-4 py-2.5">Sync Status</th></tr></thead><tbody id="table-body-vendors" class="divide-y divide-slate-100"></tbody></table>
                     </div>
                 </div>
 
@@ -179,7 +183,7 @@
                         </div>
                     </div>
                     <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left min-w-[600px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">Shop ID</th><th class="px-4 py-2.5">Outlet Workspace</th><th class="px-4 py-2.5">Operations Domain</th><th class="px-4 py-2.5">Realized SLA Index</th></tr></thead><tbody id="table-body-shops" class="divide-y divide-slate-100"></tbody></table>
+                        <table class="w-full text-left min-w-[600px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">Shop ID (PK)</th><th class="px-4 py-2.5 font-mono">Supplier ID (FK)</th><th class="px-4 py-2.5">Outlet Workspace</th><th class="px-4 py-2.5">Operations Domain</th><th class="px-4 py-2.5">Realized SLA Index</th></tr></thead><tbody id="table-body-shops" class="divide-y divide-slate-100"></tbody></table>
                     </div>
                 </div>
 
@@ -193,7 +197,7 @@
                         </div>
                     </div>
                     <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left min-w-[700px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">SKU Tag</th><th class="px-4 py-2.5">Functional Designation</th><th class="px-4 py-2.5">Allocated Pool Vol</th><th class="px-4 py-2.5">Capital Assessment ($)</th><th class="px-4 py-2.5 font-mono">Ingress Timestamp</th></tr></thead><tbody id="table-body-inventory" class="divide-y divide-slate-100"></tbody></table>
+                        <table class="w-full text-left min-w-[700px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">SKU Tag (PK)</th><th class="px-4 py-2.5 font-mono">Supplier ID (FK)</th><th class="px-4 py-2.5 font-mono">Shop ID (FK)</th><th class="px-4 py-2.5">Functional Designation</th><th class="px-4 py-2.5">Allocated Pool Vol</th><th class="px-4 py-2.5">Capital Assessment (PKR)</th><th class="px-4 py-2.5 font-mono">Ingress Timestamp</th></tr></thead><tbody id="table-body-inventory" class="divide-y divide-slate-100"></tbody></table>
                     </div>
                 </div>
 
@@ -265,7 +269,7 @@
                             <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl">
                                 <h4 class="text-xs font-bold text-rose-900 uppercase tracking-wide mb-1">Devaluation Risk Asset Exposure</h4>
                                 <p class="text-[10px] text-rose-700 mb-2">Total equity values resting in stale holding windows (> 120 days since entry block).</p>
-                                <div id="ai-dead-capital-value" class="text-2xl font-black text-rose-800 font-mono">$0.00</div>
+                                <div id="ai-dead-capital-value" class="text-xl font-black text-rose-800 font-mono">PKR 0.00</div>
                             </div>
                             <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl">
                                 <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wide mb-1">Preservation Actions Flagged</h4>
@@ -294,7 +298,7 @@
                         </div>
                     </div>
                     <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left min-w-[650px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">Trans ID</th><th class="px-4 py-2.5 font-mono">Invoice Ref Token</th><th class="px-4 py-2.5">Channel Settlement</th><th class="px-4 py-2.5">Classification Type</th><th class="px-4 py-2.5 text-right font-mono">Asset Inflow ($)</th></tr></thead><tbody id="table-body-finance" class="divide-y divide-slate-100"></tbody></table>
+                        <table class="w-full text-left min-w-[650px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">Trans ID (PK)</th><th class="px-4 py-2.5 font-mono">Supplier ID (FK)</th><th class="px-4 py-2.5 font-mono">Invoice Ref Token</th><th class="px-4 py-2.5">Channel Settlement</th><th class="px-4 py-2.5">Classification Type</th><th class="px-4 py-2.5 text-right font-mono">Asset Inflow (PKR)</th></tr></thead><tbody id="table-body-finance" class="divide-y divide-slate-100"></tbody></table>
                     </div>
                 </div>
 
@@ -310,7 +314,7 @@
                                 <p class="text-[10px] text-slate-400 font-mono">System Integrity Verification Record Matrix</p>
                             </div>
                             <div class="text-right text-[10px] text-slate-600 font-mono">
-                                <p>Date String: July 07, 2026</p>
+                                <p>Date String: July 08, 2026</p>
                                 <p>Security Key: <span id="report-scope-text" class="font-bold text-emerald-700 uppercase">GLOBAL</span></p>
                             </div>
                         </div>
@@ -320,9 +324,9 @@
                                 System calculations incorporate tax tier transformations modeled by standard operational policy functions:
                             </p>
                             <p class="text-center text-slate-900 font-bold py-1 bg-white border border-slate-100 rounded">
-                                $\text{Provisions} = \begin{cases} 0.15 \times \Phi & \text{if } \Phi \le 100,000 \\ 15,000 + 0.30 \times (\Phi - 100,000) & \text{if } \Phi > 100,000 \end{cases}$
+                                $$\text{Provisions} = \begin{cases} 0.15 \times \Phi & \text{if } \Phi \le 100,000 \\ 15,000 + 0.30 \times (\Phi - 100,000) & \text{if } \Phi > 100,000 \end{cases}$$
                             </p>
-                            <p class="text-[10px] text-slate-400">Where variable $\Phi$ represents the real-time aggregate multi-tenant liquid financial infusions.</p>
+                            <p class="text-[10px] text-slate-400">Where variable $\Phi$ represents the real-time aggregate multi-tenant liquid financial infusions formatted in PKR values.</p>
                         </div>
                         <div class="border border-slate-200 rounded-lg overflow-hidden">
                             <div class="bg-slate-50 px-4 py-2 text-[10px] font-bold text-slate-500 uppercase border-b border-slate-200">Compiled System State Audit Elements</div>
@@ -370,6 +374,8 @@
                 <button onclick="closeRecordModal()" class="text-slate-400 hover:text-white transition text-xl cursor-pointer">&times;</button>
             </div>
             <form id="modal-dynamic-form" onsubmit="handleModalFormSubmission(event)" class="p-5 space-y-4">
+                <div id="relational-meta-context-badge" class="hidden bg-indigo-50 border border-indigo-100 text-indigo-900 p-2.5 rounded-lg text-[11px] font-medium space-y-0.5"></div>
+                
                 <div id="modal-form-inputs-container" class="space-y-3"></div>
                 <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
                     <button type="button" onclick="closeRecordModal()" class="text-xs font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition">Cancel</button>
@@ -379,11 +385,11 @@
         </div>
     </div>
     <script>
-        // EXPANDED ADVANCED MULTI-TENANT SEED DICTIONARIES (INCORPORATING TIMESTAMPS AND VOLUMETRICS)
+        // SEED DICTIONARIES (VALUES SYSTEMATICALLY PARSED TO PKR DOMAINS)
         const defaultSuppliersSeed = [
-            { id: 'v1', name: 'Apex Global Logistics', email: 'ops@apex.com', region: 'North America' },
-            { id: 'v2', name: 'Nova Labs Manufacturing', email: 'production@nova.io', region: 'European Union' },
-            { id: 'v3', name: 'Quantum Core Chipsets', email: 'sc@quantumcore.tw', region: 'APAC Region' }
+            { id: 'v1', name: 'Apex Global Pakistan', email: 'ops@apex.com.pk', region: 'Sindh (Karachi Hub)' },
+            { id: 'v2', name: 'Nova Indus Manufacturing', email: 'production@novaindus.pk', region: 'Punjab (Lahore Industrial Zone)' },
+            { id: 'v3', name: 'Quantum Core Chipsets PK', email: 'sc@quantumcore.pk', region: 'Islamabad Capital Territory' }
         ];
         const defaultShopsSeed = [
             { id: 's1', vendorId: 'v1', name: 'Apex Fulfillment Hub Alpha', type: 'Distribution Center', performance: 94 },
@@ -391,18 +397,18 @@
             { id: 's3', vendorId: 'v3', name: 'Hsinchu Silicon Buffer Pool', type: 'Buffer Node', performance: 99 }
         ];
         const defaultInventorySeed = [
-            { id: 'i1', vendorId: 'v1', shopId: 's1', sku: 'APX-909-X', label: 'Heavy Lift Cargo Pallets', quantity: 450, valuation: 12400, volumeItem: 1.2, timestamp: 1772452800000 }, // Recent 2026
-            { id: 'i2', vendorId: 'v2', shopId: 's2', sku: 'NOV-BIO-55', label: 'Eppendorf High-Speed Pipettes', quantity: 120, valuation: 34000, volumeItem: 0.05, timestamp: 1735689600000 }, // Stale/Dead 2025
-            { id: 'i3', vendorId: 'v3', shopId: 's3', sku: 'QNT-CHIP-4', label: 'Lithography Quantum Gate Arrays', quantity: 8000, valuation: 412000, volumeItem: 0.002, timestamp: 1767225600000 }, // Mid 2026
-            { id: 'i4', vendorId: 'v1', shopId: 's1', sku: 'APX-DEAD-Z', label: 'Legacy Iron Cast Housings', quantity: 300, valuation: 18000, volumeItem: 4.5, timestamp: 1704067200000 } // Dead Inventory 2024
+            { id: 'i1', vendorId: 'v1', shopId: 's1', sku: 'APX-909-X', label: 'Heavy Lift Cargo Pallets', quantity: 450, valuation: 3472000, volumeItem: 1.2, timestamp: 1772452800000 }, 
+            { id: 'i2', vendorId: 'v2', shopId: 's2', sku: 'NOV-BIO-55', label: 'Eppendorf High-Speed Pipettes', quantity: 120, valuation: 9520000, volumeItem: 0.05, timestamp: 1735689600000 }, 
+            { id: 'i3', vendorId: 'v3', shopId: 's3', sku: 'QNT-CHIP-4', label: 'Lithography Quantum Gate Arrays', quantity: 8000, valuation: 115360000, volumeItem: 0.002, timestamp: 1767225600000 }, 
+            { id: 'i4', vendorId: 'v1', shopId: 's1', sku: 'APX-DEAD-Z', label: 'Legacy Iron Cast Housings', quantity: 300, valuation: 5040000, volumeItem: 4.5, timestamp: 1704067200000 } 
         ];
         const defaultFinanceSeed = [
-            { id: 'f1', vendorId: 'v1', dynamicRef: 'INV-2026-001', channel: 'Wire Net-30', amount: 48900, classification: 'Liquid Asset Infusion' },
-            { id: 'f2', vendorId: 'v2', dynamicRef: 'INV-2026-089', channel: 'Corporate Escrow', amount: 112000, classification: 'Liquid Asset Infusion' },
-            { id: 'f3', vendorId: 'v3', dynamicRef: 'INV-2026-999', channel: 'Instant Settlement Clearing', amount: 350000, classification: 'Liquid Asset Infusion' }
+            { id: 'f1', vendorId: 'v1', dynamicRef: 'INV-2026-001', channel: 'HBL Corporate Wire', amount: 13692000, classification: 'Liquid Asset Infusion' },
+            { id: 'f2', vendorId: 'v2', dynamicRef: 'INV-2026-089', channel: 'Meezan Escrow Terminal', amount: 31360000, classification: 'Liquid Asset Infusion' },
+            { id: 'f3', vendorId: 'v3', dynamicRef: 'INV-2026-999', channel: 'PRISM Instant Clearing', amount: 98000000, classification: 'Liquid Asset Infusion' }
         ];
 
-        // GLOBAL CONFIGURATION MATRIX STATES
+        // ENGINE STATES
         let currentTab = 'dashboard'; 
         let activeVendorContext = 'all'; 
         let globalSearchTerm = '';
@@ -412,11 +418,10 @@
         let appIndexedDBInstance = null;
 
         const indexedDBConfiguration = {
-            name: 'NexusPro_Enterprise_2026_DB', version: 1,
+            name: 'NexusPro_Enterprise_2026_PKR_DB', version: 1,
             stores: ['suppliers', 'shops', 'inventory', 'finance']
         };
 
-        // RUNTIME ENGINES & COMPILING PACKET LOGIC
         const systemStorageEngine = {
             initialize() {
                 return new Promise((resolve, reject) => {
@@ -483,7 +488,7 @@
             }
         };
 
-        // STRICT LOGICAL PARSING ENGINE FOR BOOLEAN MATRICES (&&, ||, !, ^)
+        // PARSING ENGINE FOR BOOLEAN MATRICES (&&, ||, !, ^)
         function evaluateAdvancedBooleanLogic(dataItem, queryExpression) {
             if (!queryExpression || queryExpression.trim() === "") return true;
             const normalizedItemString = Object.values(dataItem).map(val => String(val).toLowerCase()).join(" | ");
@@ -514,34 +519,25 @@
         function executeUniversalSearch(term) { globalSearchTerm = term; refreshApplicationState(); }
         function executeTabLevelSearch(tabKey, term) { tabLevelSearchFilters[tabKey] = term; refreshApplicationState(); }
 
-        // AUTOMATED DISPATCH BI-DIRECTIONAL UPSTREAM REST SIMULATOR
+        // EXCEL DATA PIPELINES
         function triggerRemoteUrlFetch(storeTarget) {
-            const endpoint = prompt("Provide authorized multi-tenant webhook or URL payload stream target (.xlsx format data structures):");
+            const endpoint = prompt("Provide authorized multi-tenant webhook endpoint (.xlsx):");
             if (!endpoint) return;
             
             document.getElementById('sync-status-indicator').classList.remove('hidden');
             fetch(endpoint)
-                .then(res => {
-                    if(!res.ok) throw new Error("Endpoint refused connection handshakes.");
-                    return res.arrayBuffer();
-                })
+                .then(res => { if(!res.ok) throw new Error("Endpoint handshake refused."); return res.arrayBuffer(); })
                 .then(buffer => {
                     const parsedWorkbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
                     processExcelBufferWorkbook(storeTarget, parsedWorkbook);
                 })
-                .catch(err => {
-                    alert(`Sync Interlock Failure: ${err.message}`);
-                })
-                .finally(() => {
-                    setTimeout(() => {
-                        document.getElementById('sync-status-indicator').classList.add('hidden');
-                    }, 2500);
-                });
+                .catch(err => alert(`Sync Failure: ${err.message}`))
+                .finally(() => document.getElementById('sync-status-indicator').classList.add('hidden'));
         }
 
         async function exportTableExcelEngine(storeName) {
             const rawDataMatrix = await systemStorageEngine.retrieveStoreContents(storeName);
-            if (rawDataMatrix.length === 0) return alert("Operation Intercepted: Selected pool contains no rows.");
+            if (rawDataMatrix.length === 0) return alert("Operation Cancelled: Pool contains no rows.");
             const workSheetInstance = XLSX.utils.json_to_sheet(rawDataMatrix);
             const workBookInstance = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workBookInstance, workSheetInstance, `${storeName.toUpperCase()} Data`);
@@ -558,7 +554,7 @@
                     const parsedWorkbook = XLSX.read(arrayBuffer, { type: 'array' });
                     processExcelBufferWorkbook(storeName, parsedWorkbook);
                 } catch (err) {
-                    alert("Schema Parsing Exception: Input payload document structurally compromised.");
+                    alert("Schema Exception: Document structure structurally compromised.");
                 }
             };
             binaryStreamReader.readAsArrayBuffer(uploadedFile);
@@ -579,16 +575,15 @@
                 await systemStorageEngine.writeRecordToStore(storeName, row);
                 count++;
             }
-            alert(`Packet Merge Complete: ${count} rows integrated cleanly.`);
+            alert(`Packet Merge Complete: ${count} rows integrated successfully.`);
             refreshApplicationState();
         }
 
-        // ROLE MANAGEMENT CONTROLLER LAYER (RBAC EXCLUSIONS)
+        // ROLE MANAGEMENT CONTROLLER LAYER
         function alterCryptographicRoleContext(selectedRole) {
             systemActiveRbacRole = selectedRole;
             document.getElementById('rbac-crypto-sig').innerText = `SHA256-${selectedRole.substring(0,4)}`;
             
-            // Re-apply visual interface restrictions based on role context mutations
             const rootElements = document.querySelectorAll('.rbac-root');
             const operatorElements = document.querySelectorAll('.rbac-operator');
             
@@ -605,17 +600,15 @@
             refreshApplicationState();
         }
 
-        // FEATURE 1 IMPLEMENTATION: CUBIC VOLUMETRIC SPACE ENGINE
+        // PHYSICAL FOOTPRINT CUBIC SPACE ENGINE
         function computeWarehouseOptimizationMatrix(inventoryData) {
             const spatialCapInput = parseFloat(document.getElementById('warehouse-spatial-capacity').value) || 1;
             const safetyBufferInput = parseFloat(document.getElementById('warehouse-spatial-buffer').value) || 0;
-            
             const realCapacityCeiling = spatialCapInput * (1 - (safetyBufferInput / 100));
             
             let accumulatedPhysicalCubicVolume = 0;
             inventoryData.forEach(item => {
-                const itemUnitVolume = parseFloat(item.volumeItem) || 0.1; 
-                accumulatedPhysicalCubicVolume += (itemUnitVolume * (parseInt(item.quantity) || 0));
+                accumulatedPhysicalCubicVolume += ((parseFloat(item.volumeItem) || 0.1) * (parseInt(item.quantity) || 0));
             });
 
             const currentUtilizationFactor = (accumulatedPhysicalCubicVolume / realCapacityCeiling) * 100;
@@ -629,13 +622,9 @@
             const barElement = document.getElementById('opt-utilization-bar');
             barElement.style.width = `${clampedBarWidth}%`;
             
-            if (currentUtilizationFactor > 90) {
-                barElement.className = "bg-rose-600 h-full transition-all duration-500";
-            } else if (currentUtilizationFactor > 75) {
-                barElement.className = "bg-amber-500 h-full transition-all duration-500";
-            } else {
-                barElement.className = "bg-indigo-600 h-full transition-all duration-500";
-            }
+            barElement.className = currentUtilizationFactor > 90 ? "bg-rose-600 h-full transition-all duration-500" : 
+                                 currentUtilizationFactor > 75 ? "bg-amber-500 h-full transition-all duration-500" : 
+                                 "bg-indigo-600 h-full transition-all duration-500";
             document.getElementById('opt-utilization-text').innerText = `${currentUtilizationFactor.toFixed(1)}% Capacity Occupied`;
         }
 
@@ -643,13 +632,12 @@
             systemStorageEngine.retrieveStoreContents('inventory').then(computeWarehouseOptimizationMatrix);
         }
 
-        // FEATURE 2 IMPLEMENTATION: FIFO TIME LOGIC PIPELINE
+        // FIFO ROUTER QUEUE PANEL
         function compileFIFOQueueRouterPanel(inventoryData) {
             const queueOutputTrack = document.getElementById('fifo-queue-stream');
             const counterBadge = document.getElementById('fifo-queue-count');
             queueOutputTrack.innerHTML = '';
 
-            // Sort by earliest historical entry block timestamp to preserve FIFO distribution safety
             const chronologicalSortedQueue = [...inventoryData].sort((alpha, beta) => (alpha.timestamp || 0) - (beta.timestamp || 0));
             counterBadge.innerText = chronologicalSortedQueue.length;
 
@@ -680,31 +668,31 @@
         }
 
         async function dispatchFIFOQueueHead() {
-            if (systemActiveRbacRole === 'FINANCIAL_AUDITOR') return alert("Access Denied: Financial Auditors cannot modify warehouse dispatch states.");
+            if (systemActiveRbacRole === 'FINANCIAL_AUDITOR') return alert("Access Denied: Read-only auditor profile.");
             const currentInventory = await systemStorageEngine.retrieveStoreContents('inventory');
-            if (currentInventory.length === 0) return alert("Queue Empty: No target assets identified for distribution.");
+            if (currentInventory.length === 0) return alert("Queue Empty: No target assets identified.");
             
             const chronologicalSortedQueue = [...currentInventory].sort((alpha, beta) => (alpha.timestamp || 0) - (beta.timestamp || 0));
             const targetedHeadItem = chronologicalSortedQueue[0];
 
-            if (confirm(`Authorize immediate FIFO dispatch for Queue Head: ${targetedHeadItem.sku}?`)) {
+            if (confirm(`Authorize immediate PKR-valued FIFO dispatch for Head SKU: ${targetedHeadItem.sku}?`)) {
                 await systemStorageEngine.deleteRecordFromStore('inventory', targetedHeadItem.id);
                 refreshApplicationState();
             }
         }
 
-        // FEATURE 3 IMPLEMENTATION: RISK ANALYSIS ENGINE (DEAD STOCK FACTORING)
+        // DYNAMIC PREDICTIVE RISK METRIC ENGINE
         function generateAIPredictiveForecastAnalytics(inventoryData, financeData) {
             const riskTableContainer = document.getElementById('ai-risk-matrix-table-output');
             riskTableContainer.innerHTML = '';
 
             let totalDeadCapitalExposure = 0;
             let totalPreservationActions = 0;
-            const thresholdHorizon = 120 * 24 * 60 * 60 * 1000; // 120 Days
+            const thresholdHorizon = 120 * 24 * 60 * 60 * 1000; 
 
             if (inventoryData.length === 0) {
-                riskTableContainer.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Risk analyzer tracks no inventory assets.</p>`;
-                return;
+                riskTableContainer.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Risk analyzer tracks no assets.</p>`;
+                return { deadExposure: 0, healthRatio: 100 };
             }
 
             inventoryData.forEach(item => {
@@ -730,10 +718,10 @@
                                 <span class="font-bold text-slate-900">${item.sku}</span>
                                 <span class="text-slate-500 text-[11px]">${item.label}</span>
                             </div>
-                            <div class="text-[10px] text-slate-400">Total Operational Age: ${Math.floor(holdingDuration / (24*60*60*1000))} Days across allocation pool.</div>
+                            <div class="text-[10px] text-slate-400">Operational Age: ${Math.floor(holdingDuration / (24*60*60*1000))} Days across allocation pool.</div>
                         </div>
                         <div class="text-right">
-                            <span class="text-xs font-bold block ${isDeadAssetRisk ? 'text-rose-700' : 'text-slate-700'}">$${Number(item.valuation || 0).toLocaleString()}</span>
+                            <span class="text-xs font-bold block ${isDeadAssetRisk ? 'text-rose-700' : 'text-slate-700'}">PKR ${Number(item.valuation || 0).toLocaleString()}</span>
                             <span class="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded ${isDeadAssetRisk ? 'bg-rose-200 text-rose-800' : 'bg-slate-100 text-slate-500'}">${riskRiskFactorString}</span>
                         </div>
                     </div>
@@ -741,17 +729,13 @@
             });
 
             const absoluteTotalCapitalSystem = inventoryData.reduce((acc, cur) => acc + Number(cur.valuation || 0), 0);
-            const calculatedHealthMetric = absoluteTotalCapitalSystem > 0 ? 
-                (((absoluteTotalCapitalSystem - totalDeadCapitalExposure) / absoluteTotalCapitalSystem) * 100) : 100;
+            const calculatedHealthMetric = absoluteTotalCapitalSystem > 0 ? (((absoluteTotalCapitalSystem - totalDeadCapitalExposure) / absoluteTotalCapitalSystem) * 100) : 100;
 
-            document.getElementById('ai-dead-capital-value').innerText = '$' + totalDeadCapitalExposure.toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('ai-dead-capital-value').innerText = 'PKR ' + totalDeadCapitalExposure.toLocaleString(undefined, {minimumFractionDigits: 2});
             document.getElementById('ai-preservation-actions-count').innerText = `${totalPreservationActions} SKU Blocks`;
             document.getElementById('ai-health-index').innerText = `${calculatedHealthMetric.toFixed(1)}%`;
             
-            return {
-                deadExposure: totalDeadCapitalExposure,
-                healthRatio: calculatedHealthMetric
-            };
+            return { deadExposure: totalDeadCapitalExposure, healthRatio: calculatedHealthMetric };
         }
 
         // COMPREHENSIVE VIEWPORT SYNCHRONIZER PLATFORM
@@ -784,14 +768,14 @@
             const maximumValue = values.length > 0 ? Math.max(...values, 1) : 1;
 
             if (Object.keys(aggregateMap).length === 0 || values.reduce((a,b)=>a+b, 0) === 0) {
-                canvas.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">No reportable parameters fit active multi-tenant axis conditions.</p>`;
+                canvas.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">No reportable parameters fit active tenant axis conditions.</p>`;
                 return;
             }
 
             Object.entries(aggregateMap).forEach(([key, value]) => {
                 const mathematicalPercentage = (value / maximumValue) * 100;
                 const presentationString = metricsMetric.includes('value') || metricsMetric.includes('infusion') || metricsMetric.includes('dead') ? 
-                    '$' + value.toLocaleString(undefined, {minimumFractionDigits: 2}) : value.toLocaleString() + ' Units';
+                    'PKR ' + value.toLocaleString(undefined, {minimumFractionDigits: 2}) : value.toLocaleString() + ' Units';
 
                 canvas.innerHTML += `
                     <div class="space-y-1">
@@ -807,6 +791,7 @@
             });
         }
 
+        // COMPREHENSIVE REFRESH CONTROL LOOP
         async function refreshApplicationState() {
             const currentSuppliers = await systemStorageEngine.retrieveStoreContents('suppliers');
             const currentShops = await systemStorageEngine.retrieveStoreContents('shops');
@@ -827,7 +812,6 @@
             const isolatedInventory = currentInventory.filter(createFilterCascade('inventory'));
             const isolatedFinance = currentFinance.filter(createFilterCascade('finance'));
 
-            // Execute Core Feature Analytics Engine Blocks
             computeWarehouseOptimizationMatrix(isolatedInventory);
             compileFIFOQueueRouterPanel(isolatedInventory);
             const riskMetrics = generateAIPredictiveForecastAnalytics(isolatedInventory, isolatedFinance);
@@ -845,23 +829,19 @@
         function calculateMetricsMatrix(vendors, shops, inventory, finance, riskMetrics) {
             document.getElementById('card-total-vendors').innerText = vendors.length;
             document.getElementById('card-total-shops').innerText = shops.length;
-            const totalStockCount = inventory.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
-            document.getElementById('card-total-skus').innerText = totalStockCount.toLocaleString();
+            document.getElementById('card-total-skus').innerText = inventory.reduce((sum, item) => sum + Number(item.quantity || 0), 0).toLocaleString();
+            
             const totalValuation = inventory.reduce((sum, item) => sum + Number(item.valuation || 0), 0);
-            document.getElementById('card-gross-capital').innerText = '$' + totalValuation.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById('card-gross-capital').innerText = 'PKR ' + totalValuation.toLocaleString('en-US', { minimumFractionDigits: 2 });
             
             const corporateInflow = finance.filter(f => f.classification === 'Liquid Asset Infusion').reduce((sum, f) => sum + Number(f.amount || 0), 0);
-            document.getElementById('metric-liquid-infusion').innerText = '$' + corporateInflow.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById('metric-liquid-infusion').innerText = 'PKR ' + corporateInflow.toLocaleString('en-US', { minimumFractionDigits: 2 });
             
-            // Progressive tax tier formulation ($15% base step, 30% beyond scaling boundary threshold tier limits)
             let structuralTaxEstimate = corporateInflow <= 100000 ? (corporateInflow * 0.15) : ((100000 * 0.15) + ((corporateInflow - 100000) * 0.30));
-            document.getElementById('metric-tax-provision').innerText = '$' + structuralTaxEstimate.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById('metric-tax-provision').innerText = 'PKR ' + structuralTaxEstimate.toLocaleString('en-US', { minimumFractionDigits: 2 });
             
-            const calculatedTurnover = totalValuation > 0 ? (corporateInflow / totalValuation) : 0;
-            document.getElementById('metric-turnover-index').innerText = calculatedTurnover.toFixed(2) + 'x';
-            
-            const inverseHealthRatio = 100 - (riskMetrics ? riskMetrics.healthRatio : 0);
-            document.getElementById('metric-dead-risk-index').innerText = inverseHealthRatio.toFixed(1) + '%';
+            document.getElementById('metric-turnover-index').innerText = (totalValuation > 0 ? (corporateInflow / totalValuation) : 0).toFixed(2) + 'x';
+            document.getElementById('metric-dead-risk-index').innerText = (100 - (riskMetrics ? riskMetrics.healthRatio : 0)).toFixed(1) + '%';
         }
 
         function generateProgrammaticAuditLedger(inventory, finance, shops) {
@@ -873,204 +853,250 @@
             outputElement.innerHTML = `
                 <div class="flex justify-between border-b border-slate-200 py-1.5 font-mono">
                     <span class="text-slate-500">Asset Capital Valuation Aggregates:</span>
-                    <span class="font-bold text-slate-900">$${totalValue.toLocaleString(undefined, {minimumFractionDigits:2})}</span>
+                    <span class="font-bold text-slate-900">PKR ${totalValue.toLocaleString(undefined, {minimumFractionDigits:2})}</span>
                 </div>
                 <div class="flex justify-between border-b border-slate-200 py-1.5 font-mono">
                     <span class="text-slate-500">Validated Inflow Transactions:</span>
-                    <span class="font-bold text-indigo-600">$${totalInflow.toLocaleString(undefined, {minimumFractionDigits:2})}</span>
+                    <span class="font-bold text-indigo-600">PKR ${totalInflow.toLocaleString(undefined, {minimumFractionDigits:2})}</span>
                 </div>
                 <div class="flex justify-between border-b border-slate-200 py-1.5 font-mono">
                     <span class="text-slate-500">Tenant Target SLA Compliance Mean:</span>
                     <span class="font-bold text-emerald-600">${averageSla}% SLA</span>
                 </div>
                 <div class="p-2 bg-slate-950 border border-slate-800 rounded text-[10px] font-mono text-slate-400 mt-2">
-                    <strong>RBAC State Log:</strong> Active execution authority context: <span class="text-emerald-400">${systemActiveRbacRole}</span>. Verification checksum handshake verified via local IndexedDB storage frames. No deadlocks isolated.
+                    <strong>RBAC State Log:</strong> Active execution authority context: <span class="text-emerald-400">${systemActiveRbacRole}</span>. Verification checksum handshake verified via local IndexedDB storage frames.
                 </div>
             `;
         }
 
-        // RENDER CORE TABLES GRAPHICS
         function renderSuppliersTable(data) {
             document.getElementById('table-body-vendors').innerHTML = data.map(v => `
                 <tr class="hover:bg-slate-50/80 transition font-mono"><td class="px-4 py-2.5 font-bold text-slate-600">${v.id}</td><td class="px-4 py-2.5 font-bold text-slate-900 font-sans">${v.name}</td><td class="px-4 py-2.5 text-slate-600">${v.email}</td><td class="px-4 py-2.5 text-slate-600 font-medium font-sans">${v.region}</td><td class="px-4 py-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">ACTIVE_SYNC</span></td></tr>
-            `).join('') || `<tr><td colspan="5" class="p-6 text-center text-xs text-slate-400 italic">No registered suppliers match logic criteria.</td></tr>`;
+            `).join('') || `<tr><td colspan="5" class="p-6 text-center text-xs text-slate-400 italic">No registered suppliers found.</td></tr>`;
         }
+
         function renderShopsTable(data) {
             document.getElementById('table-body-shops').innerHTML = data.map(s => `
-                <tr class="hover:bg-slate-50/80 transition"><td class="px-4 py-2.5 font-mono text-slate-500 font-bold">${s.id}</td><td class="px-4 py-2.5 font-bold text-slate-900">${s.name}</td><td class="px-4 py-2.5 text-slate-600 text-xs font-mono">${s.type}</td><td class="px-4 py-2.5 font-mono"><span class="font-bold ${s.performance > 90 ? 'text-emerald-600' : 'text-amber-600'}">${s.performance}% SLA</span></td></tr>
-            `).join('') || `<tr><td colspan="4" class="p-6 text-center text-xs text-slate-400 italic">No multi-tenant retail nodes isolated.</td></tr>`;
+                <tr class="hover:bg-slate-50/80 transition font-mono">
+                    <td class="px-4 py-2.5 font-bold text-slate-600">${s.id}</td>
+                    <td class="px-4 py-2.5 font-bold text-slate-500">${s.vendorId}</td>
+                    <td class="px-4 py-2.5 font-bold text-slate-900 font-sans">${s.name}</td>
+                    <td class="px-4 py-2.5 text-slate-600 font-sans">${s.type}</td>
+                    <td class="px-4 py-2.5">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold ${s.performance >= 90 ? 'text-emerald-600' : 'text-amber-600'}">${s.performance}%</span>
+                            <div class="w-16 bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="h-full ${s.performance >= 90 ? 'bg-emerald-500' : 'bg-amber-500'}" style="width: ${s.performance}%"></div></div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="5" class="p-6 text-center text-xs text-slate-400 italic">No fulfillment outlets match logic criteria.</td></tr>`;
         }
+
         function renderInventoryTable(data) {
             document.getElementById('table-body-inventory').innerHTML = data.map(i => {
-                const itemDate = new Date(i.timestamp || Date.now()).toISOString().substring(0,10);
+                const displayDate = new Date(i.timestamp || Date.now()).toISOString().substring(0, 10);
                 return `
-                    <tr class="hover:bg-slate-50/80 transition font-mono"><td class="px-4 py-2.5 font-bold text-slate-900">${i.sku}</td><td class="px-4 py-2.5 font-sans text-slate-700 font-medium">${i.label}</td><td class="px-4 py-2.5 text-slate-800 font-bold">${i.quantity.toLocaleString()} units</td><td class="px-4 py-2.5 font-bold text-emerald-700">$${Number(i.valuation).toLocaleString(undefined, {minimumFractionDigits:2})}</td><td class="px-4 py-2.5 text-slate-400 text-[11px]">${itemDate}</td></tr>
+                    <tr class="hover:bg-slate-50/80 transition font-mono">
+                        <td class="px-4 py-2.5 font-bold text-slate-900">${i.sku}</td>
+                        <td class="px-4 py-2.5 text-slate-500">${i.vendorId}</td>
+                        <td class="px-4 py-2.5 text-slate-500">${i.shopId}</td>
+                        <td class="px-4 py-2.5 text-slate-700 font-sans">${i.label}</td>
+                        <td class="px-4 py-2.5 text-slate-600 font-bold">${Number(i.quantity).toLocaleString()} Units</td>
+                        <td class="px-4 py-2.5 text-emerald-700 font-black">PKR ${Number(i.valuation).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                        <td class="px-4 py-2.5 text-slate-500">${displayDate}</td>
+                    </tr>
                 `;
-            }).join('') || `<tr><td colspan="5" class="p-6 text-center text-xs text-slate-400 italic">No asset matrix structures match logic parameter streams.</td></tr>`;
+            }).join('') || `<tr><td colspan="7" class="p-6 text-center text-xs text-slate-400 italic">No tracked SKUs found.</td></tr>`;
         }
+
         function renderFinanceMatrixTable(data) {
             document.getElementById('table-body-finance').innerHTML = data.map(f => `
-                <tr class="hover:bg-slate-50/80 transition font-mono"><td class="px-4 py-2.5 text-slate-500">${f.id}</td><td class="px-4 py-2.5 text-slate-700 font-semibold">${f.dynamicRef}</td><td class="px-4 py-2.5 text-slate-600 text-xs">${f.channel}</td><td class="px-4 py-2.5"><span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-800">${f.classification}</span></td><td class="px-4 py-2.5 text-right font-bold text-emerald-700">+$${Number(f.amount).toLocaleString(undefined, {minimumFractionDigits:2})}</td></tr>
-            `).join('') || `<tr><td colspan="5" class="p-6 text-center text-xs text-slate-400 italic">Financial asset allocations empty.</td></tr>`;
+                <tr class="hover:bg-slate-50/80 transition font-mono">
+                    <td class="px-4 py-2.5 text-slate-500">${f.id}</td>
+                    <td class="px-4 py-2.5 text-slate-500">${f.vendorId}</td>
+                    <td class="px-4 py-2.5 font-bold text-slate-700">${f.dynamicRef}</td>
+                    <td class="px-4 py-2.5 text-slate-600 font-sans">${f.channel}</td>
+                    <td class="px-4 py-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-100 text-indigo-800 font-sans">${f.classification}</span></td>
+                    <td class="px-4 py-2.5 text-right font-black text-slate-900">PKR ${Number(f.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                </tr>
+            `).join('') || `<tr><td colspan="6" class="p-6 text-center text-xs text-slate-400 italic">No financial ledger rows found.</td></tr>`;
         }
 
-        // ENTRY DIALOG MARGINAL GENERATORS
-        function openRecordModal(storeKey) {
-            if (systemActiveRbacRole === 'FINANCIAL_AUDITOR') return alert("Access Restriction: Financial auditors are prohibited from initiating data mutations.");
-            activeModalStoreTarget = storeKey;
-            document.getElementById('modal-title-text').innerText = `Inject Packet: [${storeKey.toUpperCase()}]`;
-            const container = document.getElementById('modal-form-inputs-container');
-            container.innerHTML = '';
-
-            const inputMarkupGenerator = (id, label, placeholder, type = 'text') => `
-                <div>
-                    <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1 tracking-wider">${label}</label>
-                    <input type="${type}" name="${id}" required placeholder="${placeholder}" class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:border-slate-900 focus:bg-white font-mono transition-all">
-                </div>
-            `;
-
-            let schemaInputs = inputMarkupGenerator('id', 'Packet Key ID', 'e.g., tx-707');
-            if (storeKey !== 'suppliers') { schemaInputs += inputMarkupGenerator('vendorId', 'Parent Tenant Identity Context Link', 'e.g., v1'); }
-
-            if (storeKey === 'suppliers') {
-                schemaInputs += inputMarkupGenerator('name', 'Corporate Entity Label', 'e.g., Shinetsu Co');
-                schemaInputs += inputMarkupGenerator('email', 'Secure Communications Gateway', 'e.g., secure@shinetsu.jp', 'email');
-                schemaInputs += inputMarkupGenerator('region', 'Node Regional Jurisdiction', 'e.g., Japan');
-            } else if (storeKey === 'shops') {
-                schemaInputs += inputMarkupGenerator('name', 'Outlet Node Designation', 'e.g., Tokyo Air Freight Depot');
-                schemaInputs += inputMarkupGenerator('type', 'Operations Domain Channel Class', 'e.g., Cross-Dock Hub');
-                schemaInputs += inputMarkupGenerator('performance', 'Realized Mean SLA Target Value (%)', '95', 'number');
-            } else if (storeKey === 'inventory') {
-                schemaInputs += inputMarkupGenerator('shopId', 'Target Bound Retail Node Link', 'e.g., s1');
-                schemaInputs += inputMarkupGenerator('sku', 'Product Code Designation Tag (SKU)', 'e.g., APX-CHIP-V');
-                schemaInputs += inputMarkupGenerator('label', 'Functional Description Label', 'e.g., Optical Transceivers');
-                schemaInputs += inputMarkupGenerator('quantity', 'Volumetric Allocation Units (Quantity)', '1000', 'number');
-                schemaInputs += inputMarkupGenerator('valuation', 'Assessed Capital Book Evaluation Valuation ($)', '45000', 'number');
-                schemaInputs += inputMarkupGenerator('volumeItem', 'Single Unit Storage Displacement Volume (m³)', '0.02', 'number');
-            } else if (storeKey === 'finance') {
-                schemaInputs += inputMarkupGenerator('dynamicRef', 'Invoice Reference Protocol Token', 'e.g., INV-2026-X8');
-                schemaInputs += inputMarkupGenerator('channel', 'Settlement Clearing Route Network', 'e.g., Wire Transfer');
-                schemaInputs += inputMarkupGenerator('amount', 'Asset Inflow Liquid Capital Amount ($)', '75000', 'number');
-                schemaInputs += inputMarkupGenerator('classification', 'Transaction Classification Token Descriptor', 'Liquid Asset Infusion');
-            }
-
-            container.innerHTML = schemaInputs;
-            document.getElementById('universal-entry-modal').classList.remove('hidden');
-        }
-
-        function closeRecordModal() {
-            document.getElementById('universal-entry-modal').classList.add('hidden');
-            document.getElementById('modal-dynamic-form').reset();
-        }
-
-        async function handleModalFormSubmission(event) {
-            event.preventDefault();
-            const formDataInstance = new FormData(event.target);
-            let extractedRecordObject = {};
+        function rebuildWorkspaceContextMenus(suppliers) {
+            const sidebarSelector = document.getElementById('vendor-context-selector');
+            const mobileSelector = document.getElementById('mobile-context-selector');
+            const currentSelection = activeVendorContext;
             
-            formDataInstance.forEach((val, key) => {
-                if (['performance', 'quantity'].includes(key)) { extractedRecordObject[key] = parseInt(val); } 
-                else if (['valuation', 'amount', 'volumeItem'].includes(key)) { extractedRecordObject[key] = parseFloat(val); } 
-                else { extractedRecordObject[key] = val; }
-            });
-            
-            if(!extractedRecordObject.timestamp) extractedRecordObject.timestamp = Date.now();
+            let menuOptionsHtml = `<option value="all">🌐 Global Portal Operator</option>`;
+            suppliers.forEach(sup => { menuOptionsHtml += `<option value="${sup.id}">🏢 ${sup.name}</option>`; });
 
-            await systemStorageEngine.writeRecordToStore(activeModalStoreTarget, extractedRecordObject);
-            closeRecordModal();
-            refreshApplicationState();
+            sidebarSelector.innerHTML = menuOptionsHtml;
+            mobileSelector.innerHTML = menuOptionsHtml;
+            sidebarSelector.value = currentSelection;
+            mobileSelector.value = currentSelection;
         }
 
-        // SCREEN ROUTING TABS MATRIX MANAGERS
-        function switchTab(targetTabId) {
-            currentTab = targetTabId;
-            const headerTitles = {
-                dashboard: 'Dashboard Ecosystem', vendors: 'Suppliers Directory Matrix', shops: 'Multi-Tenant Corporate Outlets',
-                inventory: 'Inventory Liquidity Ledger', warehouse: 'Warehouse Spatial footprint Density Optimizer',
-                fifo_router: 'FIFO Priority Dispatch Management Queue', forecasting: 'AI Predictive Forecasting & Decay Risk Factor Matrix',
-                finance: 'Financial Operations Ledger Matrix', reports: 'Cryptographic Compliance Verification Report'
-            };
-            document.getElementById('app-current-title').innerText = headerTitles[targetTabId] || 'Nexus Suite';
-
-            document.querySelectorAll('[id^="tab-panel-"]').forEach(p => p.classList.add('hidden'));
-            const targetedPanel = document.getElementById(`tab-panel-${targetTabId}`);
-            if (targetedPanel) targetedPanel.classList.remove('hidden');
-
-            document.querySelectorAll('#sidebar-nav button').forEach(btn => {
-                btn.className = "w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-all text-left cursor-pointer";
-            });
-            const desktopButton = document.getElementById(`nav-${targetTabId}`);
-            if (desktopButton) desktopButton.className = "w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg bg-emerald-600 text-white transition-all text-left cursor-pointer";
-
-            document.querySelectorAll('#mobile-tabs-scroll-track button').forEach(p => {
-                p.className = "px-3.5 py-1.5 text-xs font-bold rounded-full text-slate-400 hover:text-slate-200 whitespace-nowrap shrink-0 transition-all flex items-center gap-1";
-            });
-            const mobileButton = document.getElementById(`mobile-nav-${targetTabId}`);
-            if (mobileButton) {
-                mobileButton.className = "px-3.5 py-1.5 text-xs font-bold rounded-full bg-emerald-600 text-white whitespace-nowrap shrink-0 transition-all flex items-center gap-1";
-                mobileButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-            }
-        }
-
-        function switchContext(vendorId) {
-            activeVendorContext = vendorId;
-            document.getElementById('vendor-context-selector').value = vendorId;
-            document.getElementById('mobile-context-selector').value = vendorId;
+        function switchContext(contextValue) {
+            activeVendorContext = contextValue;
+            document.getElementById('vendor-context-selector').value = contextValue;
+            document.getElementById('mobile-context-selector').value = contextValue;
+            const reportScopeText = document.getElementById('report-scope-text');
+            if (reportScopeText) reportScopeText.innerText = contextValue === 'all' ? 'GLOBAL' : contextValue.toUpperCase();
             refreshApplicationState();
         }
 
         function toggleIsolationWarnings() {
             const banner = document.getElementById('filter-warning');
-            const contextualBadge = document.getElementById('app-context-badge');
-            if (activeVendorContext === 'all') {
-                banner.classList.add('hidden');
-                contextualBadge.innerText = 'Showing compiled operational matrices over global state data pools.';
-                if(document.getElementById('report-scope-text')) document.getElementById('report-scope-text').innerText = 'GLOBAL';
-            } else {
+            const dynamicBadge = document.getElementById('filter-warning-vendor');
+            if (activeVendorContext !== 'all') {
                 banner.classList.remove('hidden');
-                document.getElementById('filter-warning-vendor').innerText = `Isolated Tenant Token Context Lockout: ${activeVendorContext}`;
-                contextualBadge.innerText = `Partition Network Isolation active on data scope parameter keys: ${activeVendorContext}`;
-                if(document.getElementById('report-scope-text')) document.getElementById('report-scope-text').innerText = activeVendorContext;
+                dynamicBadge.innerText = activeVendorContext;
+            } else {
+                banner.classList.add('hidden');
             }
         }
 
-        function rebuildWorkspaceContextMenus(vendors) {
-            const selectDesktop = document.getElementById('vendor-context-selector');
-            const selectMobile = document.getElementById('mobile-context-selector');
-            const preservedContext = activeVendorContext;
-            let selectorOptionsMarkup = `<option value="all">🌐 Global Portal Operator</option>`;
-            vendors.forEach(v => { selectorOptionsMarkup += `<option value="${v.id}">🏢 ${v.name}</option>`; });
-            selectDesktop.innerHTML = selectorOptionsMarkup; selectMobile.innerHTML = selectorOptionsMarkup;
-            selectDesktop.value = preservedContext; selectMobile.value = preservedContext;
+        function switchTab(targetTabId) {
+            currentTab = targetTabId;
+            const navContainer = document.getElementById('sidebar-nav');
+            navContainer.querySelectorAll('button').forEach(btn => {
+                btn.className = btn.id === `nav-${targetTabId}` ? 
+                    "w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg bg-emerald-600 text-white transition-all text-left cursor-pointer" : 
+                    "w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-all text-left cursor-pointer";
+            });
+
+            const mobileTrack = document.getElementById('mobile-tabs-scroll-track');
+            mobileTrack.querySelectorAll('button').forEach(btn => {
+                btn.className = btn.id === `mobile-nav-${targetTabId}` ? 
+                    "px-3.5 py-1.5 text-xs font-bold rounded-full bg-emerald-600 text-white whitespace-nowrap shrink-0 transition-all flex items-center gap-1" : 
+                    "px-3.5 py-1.5 text-xs font-bold rounded-full text-slate-400 hover:text-slate-200 whitespace-nowrap shrink-0 transition-all flex items-center gap-1";
+            });
+
+            ['dashboard', 'vendors', 'shops', 'inventory', 'warehouse', 'fifo_router', 'forecasting', 'finance', 'reports'].forEach(panel => {
+                const element = document.getElementById(`tab-panel-${panel}`);
+                panel === targetTabId ? element.classList.remove('hidden') : element.classList.add('hidden');
+            });
+
+            const contextualTitles = {
+                dashboard: "Dashboard Ecosystem", vendors: "Suppliers Identity Matrix", shops: "Outlets & Pools Deployment",
+                inventory: "Inventory Registry Ledger", warehouse: "Spatial Allocation Optimization", fifo_router: "FIFO Distribution Queue Router",
+                forecasting: "Predictive Forecasting Analytics", finance: "Financial Settlement Ledger", reports: "System Cryptographic Verifications"
+            };
+            document.getElementById('app-current-title').innerText = contextualTitles[targetTabId];
         }
 
         function toggleMobileSearchOverlay() {
-            const overlay = document.getElementById('mobile-search-overlay');
-            if (overlay.classList.contains('hidden')) {
-                overlay.classList.remove('hidden'); overlay.classList.add('flex');
-                document.getElementById('mobile-search-native-input').focus();
-            } else {
-                overlay.classList.add('hidden'); overlay.classList.remove('flex');
+            const layer = document.getElementById('mobile-search-overlay');
+            layer.classList.toggle('hidden'); layer.classList.toggle('flex');
+            if (!layer.classList.contains('hidden')) document.getElementById('mobile-search-native-input').focus();
+        }
+
+        // INTELLIGENT AUTO-GENERATION AND RELATIONAL MODAL CONTROL
+        async function openRecordModal(targetStore) {
+            if (systemActiveRbacRole === 'FINANCIAL_AUDITOR') return alert("RBAC Intercepted: Read-only profile level.");
+            activeModalStoreTarget = targetStore;
+            
+            const formTrack = document.getElementById('modal-form-inputs-container');
+            const metaBadge = document.getElementById('relational-meta-context-badge');
+            const modalTitle = document.getElementById('modal-title-text');
+            
+            formTrack.innerHTML = '';
+            metaBadge.classList.remove('hidden');
+            modalTitle.innerText = `Append ${targetStore.toUpperCase()} Data Block`;
+
+            const currentSuppliers = await systemStorageEngine.retrieveStoreContents('suppliers');
+            const currentShops = await systemStorageEngine.retrieveStoreContents('shops');
+            const currentInventory = await systemStorageEngine.retrieveStoreContents('inventory');
+            const currentFinance = await systemStorageEngine.retrieveStoreContents('finance');
+
+            const supplierSelectOptions = currentSuppliers.map(s => `<option value="${s.id}" ${activeVendorContext === s.id ? 'selected' : ''}>${s.name} (${s.id})</option>`).join('');
+            const shopSelectOptions = currentShops.map(s => `<option value="${s.id}">${s.name} (${s.id})</option>`).join('');
+
+            // Intelligent Key Prediction Logic
+            let autoPredictedId = 'id_' + Math.random().toString(36).substring(2, 7);
+            if (targetStore === 'suppliers') autoPredictedId = 'v' + (currentSuppliers.length + 1);
+            if (targetStore === 'shops') autoPredictedId = 's' + (currentShops.length + 1);
+            if (targetStore === 'finance') autoPredictedId = 'f' + (currentFinance.length + 1);
+
+            if (targetStore === 'suppliers') {
+                metaBadge.innerHTML = `<strong>Schema Validation Constraints:</strong> Primary Key entity initialization node. Creates workspace separation context framework rules.`;
+                formTrack.innerHTML = `
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Supplier ID Token (Auto-Generated PK)</label><input type="text" name="id" value="${autoPredictedId}" required class="w-full bg-slate-100 text-xs p-2 border border-slate-200 rounded-lg font-mono outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Legal Identity Designation</label><input type="text" name="name" required class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Communications Gateway Email</label><input type="email" name="email" required class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Node Jurisdiction</label><input type="text" name="region" required placeholder="e.g. Sindh, PK" class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg outline-none"></div>
+                `;
+            } else if (targetStore === 'shops') {
+                metaBadge.innerHTML = `<strong>Schema Validation Constraints:</strong> Cascading Foreign Key dependency established tracking <code class="bg-indigo-200 px-1 rounded">Suppliers (id)</code> constraint rule mappings.`;
+                formTrack.innerHTML = `
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Outlet ID Token (Auto-Generated PK)</label><input type="text" name="id" value="${autoPredictedId}" required class="w-full bg-slate-100 text-xs p-2 border border-slate-200 rounded-lg font-mono outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Parent Workspace Tenant (FK Matrix)</label><select name="vendorId" class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg outline-none">${supplierSelectOptions}</select></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Outlet Workspace Name</label><input type="text" name="name" required class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Operations Domain Type</label><input type="text" name="type" required placeholder="e.g. Retailer Depot" class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Initial SLA Performance Metric (%)</label><input type="number" name="performance" min="0" max="100" value="95" required class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg font-mono outline-none"></div>
+                `;
+            } else if (targetStore === 'inventory') {
+                metaBadge.innerHTML = `<strong>Schema Validation Constraints:</strong> Relational Joint Node context linked via <code class="bg-indigo-200 px-1 rounded">Supplier (FK)</code> and <code class="bg-indigo-200 px-1 rounded">Outlet Pool (FK)</code> structures.`;
+                let autoSku = 'SKU-' + Math.floor(100000 + Math.random() * 900000);
+                formTrack.innerHTML = `
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Unique SKU Tag (PK Matrix Variant)</label><input type="text" name="sku" value="${autoSku}" required class="w-full bg-slate-100 text-xs p-2 border border-slate-200 rounded-lg font-mono outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Associated Tenant Pool (FK)</label><select name="vendorId" class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg outline-none">${supplierSelectOptions}</select></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Target Distribution Outlet (FK)</label><select name="shopId" class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg outline-none">${shopSelectOptions}</select></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Functional Designation Label</label><input type="text" name="label" required class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Allocated Pool Volume Quantity</label><input type="number" name="quantity" required class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg font-mono outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Capital Valuation (PKR Value Reference)</label><input type="number" name="valuation" step="1" required class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg font-mono outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Unit Spatial Footprint Volume (m³)</label><input type="number" name="volumeItem" step="0.001" value="0.1" required class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg font-mono outline-none"></div>
+                `;
+            } else if (targetStore === 'finance') {
+                metaBadge.innerHTML = `<strong>Schema Validation Constraints:</strong> Financial tracking ledger matrix directly indexing parent <code class="bg-indigo-200 px-1 rounded">Supplier ID (FK)</code> allocation variables.`;
+                let predictedInv = 'INV-2026-' + Math.floor(100 + Math.random() * 900);
+                formTrack.innerHTML = `
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Transaction Identity Token (Auto PK)</label><input type="text" name="id" value="${autoPredictedId}" required class="w-full bg-slate-100 text-xs p-2 border border-slate-200 rounded-lg font-mono outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Associated Tenant Pool (FK Target)</label><select name="vendorId" class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg outline-none">${supplierSelectOptions}</select></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Invoice Reference Token</label><input type="text" name="dynamicRef" value="${predictedInv}" required class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg font-mono outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Channel Settlement Method</label><input type="text" name="channel" placeholder="e.g. Cash / Bank Clearing" required class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Classification Category</label><input type="text" name="classification" value="Liquid Asset Infusion" readonly class="w-full bg-slate-100 text-xs p-2 border border-slate-200 rounded-lg outline-none"></div>
+                    <div><label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Asset Inflow Capitalization (PKR)</label><input type="number" name="amount" step="1" required class="w-full bg-slate-50 text-xs p-2 border border-slate-200 rounded-lg font-mono outline-none"></div>
+                `;
             }
+
+            document.getElementById('universal-entry-modal').classList.remove('hidden');
+        }
+
+        function closeRecordModal() { document.getElementById('universal-entry-modal').classList.add('hidden'); }
+
+        async function handleModalFormSubmission(e) {
+            e.preventDefault();
+            const formData = new FormData(document.getElementById('modal-dynamic-form'));
+            let dataObject = {};
+            formData.forEach((value, key) => { dataObject[key] = value; });
+
+            if (!dataObject.id) dataObject.id = 'usr_' + Math.random().toString(36).substring(2, 9);
+            if (dataObject.quantity) dataObject.quantity = parseInt(dataObject.quantity);
+            if (dataObject.valuation) dataObject.valuation = parseFloat(dataObject.valuation);
+            if (dataObject.performance) dataObject.performance = parseInt(dataObject.performance);
+            if (dataObject.amount) dataObject.amount = parseFloat(dataObject.amount);
+            if (dataObject.volumeItem) dataObject.volumeItem = parseFloat(dataObject.volumeItem);
+            dataObject.timestamp = Date.now();
+
+            await systemStorageEngine.writeRecordToStore(activeModalStoreTarget, dataObject);
+            closeRecordModal();
+            document.getElementById('modal-dynamic-form').reset();
+            refreshApplicationState();
         }
 
         function downloadReportPDF() {
-            const documentCanvasTarget = document.getElementById('pdf-report-canvas');
-            const structuralOptions = {
-                margin: 0.5, filename: 'NexusPro_AuditStatement_2026.pdf',
-                image: { type: 'jpeg', quality: 0.99 },
-                html2canvas: { scale: 2, useCORS: true },
+            const reportTargetElement = document.getElementById('pdf-report-canvas');
+            const conversionConfigurationOptions = {
+                margin: 0.5, filename: `NexusSuite_AuditStatement_${activeVendorContext.toUpperCase()}_2026.pdf`,
+                image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, letterRendering: true },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
-            html2pdf().set(structuralOptions).from(documentCanvasTarget).save();
+            html2pdf().set(conversionConfigurationOptions).from(reportTargetElement).save();
         }
 
-        // APPLICATION LEVEL ACCESS ENTRY TRIGGERS
         window.addEventListener('DOMContentLoaded', () => {
-            systemStorageEngine.initialize().then(() => {
-                switchTab('dashboard');
-                alterCryptographicRoleContext('ROOT_ADMIN');
-            });
+            systemStorageEngine.initialize().then(() => { refreshApplicationState(); });
         });
     </script>
 </body>
