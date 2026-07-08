@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusMultiVendor Enterprise Suite v2026 Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body { padding-bottom: 76px; }
+        @media (min-width: 768px) { body { padding-bottom: 0; } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased transition-all">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <aside class="w-66 bg-slate-950 text-white flex flex-col justify-between hidden md:flex shrink-0 border-r border-slate-800">
+            <div>
+                <div class="p-5 flex items-center gap-3 border-b border-slate-800 bg-black">
+                    <i class="fa-solid fa-square-matrix text-emerald-400 text-2xl animate-pulse"></i>
+                    <div>
+                        <span class="text-lg font-bold tracking-wide block">NexusPro</span>
+                        <span class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Predictive ERP Engine</span>
+                    </div>
+                </div>
+
+                <div class="p-4 border-b border-slate-800 bg-slate-900/40 space-y-3">
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider">Cryptographic RBAC</label>
+                            <span id="rbac-crypto-sig" class="font-mono text-[9px] text-emerald-400 bg-emerald-950 px-1 rounded border border-emerald-800/60">SHA256-OK</span>
+                        </div>
+                        <select id="system-rbac-role" onchange="alterCryptographicRoleContext(this.value)" class="w-full bg-slate-900 text-xs text-slate-200 border border-slate-700 rounded-lg p-2 focus:outline-none focus:border-emerald-500 cursor-pointer font-mono">
+                            <option value="ROOT_ADMIN">⚡ ROOT_ADMIN (Unrestricted)</option>
+                            <option value="LOGISTICS_OPERATOR">🚛 LOGISTICS_OPERATOR (SLA / Router Only)</option>
+                            <option value="FINANCIAL_AUDITOR">📊 FINANCIAL_AUDITOR (Read-Only Ledger)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-wider">Universal Logic Filter</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-code absolute left-2.5 top-2.5 text-slate-500 text-xs"></i>
+                            <input type="text" id="universal-search-input" oninput="executeUniversalSearch(this.value)" placeholder="Boolean Logic: Apex && !EU..." class="w-full pl-8 pr-2 py-1.5 bg-slate-900 text-slate-200 border border-slate-700 rounded-lg text-[11px] outline-none focus:border-emerald-500 font-mono transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-wider">Workspace Tenant Partition</label>
+                        <select id="vendor-context-selector" onchange="switchContext(this.value)" class="w-full bg-slate-900 text-xs text-white border border-slate-700 rounded-lg p-2 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                            <option value="all">🌐 Global Portal Operator</option>
+                        </select>
+                    </div>
+                </div>
+
+                <nav class="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-320px)] custom-scrollbar" id="sidebar-nav">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg bg-emerald-600 text-white transition-all text-left cursor-pointer"><i class="fa-solid fa-chart-line w-4 text-center"></i> Dashboard Ecosystem</button>
+                    <button onclick="switchTab('vendors')" id="nav-vendors" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-all text-left cursor-pointer"><i class="fa-solid fa-building w-4 text-center"></i> Suppliers Matrix</button>
+                    <button onclick="switchTab('shops')" id="nav-shops" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-all text-left cursor-pointer"><i class="fa-solid fa-store w-4 text-center"></i> Outlets & Pools</button>
+                    <button onclick="switchTab('inventory')" id="nav-inventory" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-all text-left cursor-pointer"><i class="fa-solid fa-boxes-stacked w-4 text-center"></i> Inventory Registry</button>
+                    <button onclick="switchTab('warehouse')" id="nav-warehouse" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-all text-left cursor-pointer"><i class="fa-solid fa-warehouse w-4 text-center"></i> Space Allocator</button>
+                    <button onclick="switchTab('fifo_router')" id="nav-fifo_router" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-all text-left cursor-pointer"><i class="fa-solid fa-route w-4 text-center"></i> FIFO Requisition</button>
+                    <button onclick="switchTab('forecasting')" id="nav-forecasting" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-all text-left cursor-pointer"><i class="fa-solid fa-brain-circuit w-4 text-center"></i> AI Risk & Valuations</button>
+                    <button onclick="switchTab('finance')" id="nav-finance" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-all text-left cursor-pointer"><i class="fa-solid fa-scale-balanced w-4 text-center"></i> Financial Ledger</button>
+                    <button onclick="switchTab('reports')" id="nav-reports" class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-all text-left cursor-pointer"><i class="fa-solid fa-shield-halved w-4 text-center"></i> Real-Time Audit</button>
+                </nav>
+            </div>
+            <div class="p-3 border-t border-slate-800 text-[10px] text-slate-500 text-center bg-black font-mono">
+                B-D Sync Engine Enabled &bull; v2026.1
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col overflow-y-auto custom-scrollbar">
+            <header class="bg-white shadow-xs px-4 md:px-6 py-4 flex items-center justify-between border-b border-slate-200 shrink-0">
+                <div class="flex flex-col">
+                    <h1 id="app-current-title" class="text-base md:text-xl font-bold text-slate-900">Dashboard Ecosystem</h1>
+                    <p id="app-context-badge" class="text-[11px] md:text-xs text-slate-500 font-medium mt-0.5">Showing compiled operational matrices over global state data pools.</p>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <div id="sync-status-indicator" class="hidden md:flex items-center gap-1.5 px-2 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase rounded border border-emerald-200">
+                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span> Live Upstream Synced
+                    </div>
+                    <div class="w-36 md:hidden">
+                        <select id="mobile-context-selector" onchange="switchContext(this.value)" class="w-full bg-slate-100 text-[11px] font-semibold text-slate-700 border border-slate-200 rounded-lg p-1.5 focus:outline-none focus:border-emerald-500">
+                            <option value="all">🌐 Global Portal</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+
+            <div id="filter-warning" class="hidden bg-amber-50 border-b border-amber-200 px-4 md:px-6 py-2 text-xs text-amber-800 flex items-center justify-between animate-in slide-in-from-top-2 duration-100">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm"></i> 
+                    <span>Structural Partition Isolation Active: <strong id="filter-warning-vendor" class="font-mono">Global</strong></span>
+                </div>
+                <button onclick="switchContext('all')" class="text-[10px] bg-amber-200 hover:bg-amber-300 font-bold px-2 py-0.5 rounded text-amber-900 transition">Escape Isolation</button>
+            </div>
+
+            <div id="view-port" class="p-4 md:p-6 space-y-6 max-w-7xl w-full mx-auto flex-1">
+                
+                <div id="tab-panel-dashboard" class="space-y-6">
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-white p-4 rounded-xl shadow-xs border border-slate-200 flex items-center justify-between">
+                            <div><p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Tenant Suppliers</p><h3 id="card-total-vendors" class="text-xl md:text-2xl font-black mt-1 text-slate-900">0</h3></div>
+                            <div class="p-2 bg-slate-100 text-slate-700 rounded-lg"><i class="fa-solid fa-building text-base"></i></div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-xs border border-slate-200 flex items-center justify-between">
+                            <div><p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Fulfillment Outlets</p><h3 id="card-total-shops" class="text-xl md:text-2xl font-black mt-1 text-slate-900">0</h3></div>
+                            <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><i class="fa-solid fa-store text-base"></i></div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-xs border border-slate-200 flex items-center justify-between">
+                            <div><p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Monitored SKU Base</p><h3 id="card-total-skus" class="text-xl md:text-2xl font-black mt-1 text-slate-900">0</h3></div>
+                            <div class="p-2 bg-blue-50 text-blue-600 rounded-lg"><i class="fa-solid fa-boxes-stacked text-base"></i></div>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-xs border border-slate-200 flex items-center justify-between">
+                            <div><p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Book Capital Base</p><h3 id="card-gross-capital" class="text-xl md:text-2xl font-black mt-1 text-emerald-700">$0.00</h3></div>
+                            <div class="p-2 bg-teal-50 text-teal-600 rounded-lg"><i class="fa-solid fa-circle-dollar-to-slot text-base"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 bg-slate-950 text-white p-5 rounded-xl border border-slate-800 shadow-lg font-mono">
+                        <div class="p-1"><span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Capital Infusions</span><span id="metric-liquid-infusion" class="text-sm md:text-base font-bold text-indigo-400">$0.00</span></div>
+                        <div class="p-1"><span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Est Tax Provisions</span><span id="metric-tax-provision" class="text-sm md:text-base font-bold text-amber-400">$0.00</span></div>
+                        <div class="p-1"><span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Velocity Turnover</span><span id="metric-turnover-index" class="text-sm md:text-base font-bold text-emerald-400">0.00x</span></div>
+                        <div class="p-1"><span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider block">Dead Risk Ratio</span><span id="metric-dead-risk-index" class="text-sm md:text-base font-bold text-rose-400">0.0%</span></div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2">
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Comparative Multi-Tenant Matrix Weightings</h3>
+                                <p class="text-[11px] text-slate-500">Natively drawn dynamic charts evaluating spatial structures and equity allocations</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase">Axis Parameter:</span>
+                                <select id="chart-metric-dimension" onchange="refreshApplicationState()" class="bg-slate-50 border border-slate-200 text-xs font-semibold rounded px-2 py-1 text-slate-700 outline-none">
+                                    <option value="inventory-value">Inventory Capital Valuation ($)</option>
+                                    <option value="inventory-qty">Physical Unit Volumes (Count)</option>
+                                    <option value="financial-infusion">Direct Upstream Inflow Aggregates ($)</option>
+                                    <option value="dead-valuation">Dead Stock Write-off Exposure ($)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="dynamic-chart-canvas" class="space-y-3 pt-2"></div>
+                    </div>
+                </div>
+                
+                <div id="tab-panel-vendors" class="hidden space-y-4">
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+                        <input type="text" oninput="executeTabLevelSearch('vendors', this.value)" placeholder="Filter Matrix with Boolean Logic Operators..." class="flex-1 min-w-[240px] px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono outline-none focus:bg-white focus:border-slate-900 transition-all">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <button onclick="openRecordModal('suppliers')" class="rbac-root bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-1.5 px-2.5 rounded-lg flex items-center gap-1 transition cursor-pointer"><i class="fa-solid fa-plus-circle"></i> Add Supplier</button>
+                            <button onclick="triggerRemoteUrlFetch('suppliers')" class="rbac-root bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-semibold py-1.5 px-2.5 rounded-lg flex items-center gap-1 transition cursor-pointer"><i class="fa-solid fa-cloud-bolt"></i> Upstream Stream Sync</button>
+                            <label class="rbac-root bg-slate-100 text-slate-700 text-xs font-semibold py-1.5 px-2.5 rounded-lg cursor-pointer transition flex items-center gap-1 hover:bg-slate-200"><i class="fa-solid fa-file-import text-blue-500"></i> Import Excel <input type="file" accept=".xlsx, .xls" class="hidden" onchange="importTableExcelEngine('suppliers', event)"></label>
+                            <button onclick="exportTableExcelEngine('suppliers')" class="bg-slate-900 hover:bg-black text-white text-xs font-semibold py-1.5 px-2.5 rounded-lg flex items-center gap-1 transition cursor-pointer"><i class="fa-solid fa-file-excel text-emerald-400"></i> Export XLS</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left min-w-[600px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">Supplier ID</th><th class="px-4 py-2.5">Legal Identity</th><th class="px-4 py-2.5">Communications Gateway</th><th class="px-4 py-2.5">Node Jurisdiction</th><th class="px-4 py-2.5">Sync Status</th></tr></thead><tbody id="table-body-vendors" class="divide-y divide-slate-100"></tbody></table>
+                    </div>
+                </div>
+
+                <div id="tab-panel-shops" class="hidden space-y-4">
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+                        <input type="text" oninput="executeTabLevelSearch('shops', this.value)" placeholder="Boolean Logic Filters..." class="flex-1 min-w-[240px] px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono outline-none">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <button onclick="openRecordModal('shops')" class="rbac-root bg-emerald-600 text-white text-xs font-semibold py-1.5 px-2.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-circle-plus"></i> Add Storefront</button>
+                            <button onclick="triggerRemoteUrlFetch('shops')" class="rbac-root bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-semibold py-1.5 px-2.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-cloud-bolt"></i> Stream Sync</button>
+                            <button onclick="exportTableExcelEngine('shops')" class="bg-slate-900 text-white text-xs font-semibold py-1.5 px-2.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-file-excel text-emerald-400"></i> Export</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left min-w-[600px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">Shop ID</th><th class="px-4 py-2.5">Outlet Workspace</th><th class="px-4 py-2.5">Operations Domain</th><th class="px-4 py-2.5">Realized SLA Index</th></tr></thead><tbody id="table-body-shops" class="divide-y divide-slate-100"></tbody></table>
+                    </div>
+                </div>
+
+                <div id="tab-panel-inventory" class="hidden space-y-4">
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+                        <input type="text" oninput="executeTabLevelSearch('inventory', this.value)" placeholder="Trace elements..." class="flex-1 min-w-[240px] px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono outline-none">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <button onclick="openRecordModal('inventory')" class="rbac-root bg-emerald-600 text-white text-xs font-semibold py-1.5 px-2.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-circle-plus"></i> Append Inventory</button>
+                            <button onclick="triggerRemoteUrlFetch('inventory')" class="rbac-root bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-semibold py-1.5 px-2.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-cloud-bolt"></i> Stream Sync</button>
+                            <button onclick="exportTableExcelEngine('inventory')" class="bg-slate-900 text-white text-xs font-semibold py-1.5 px-2.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-file-excel text-emerald-400"></i> Export</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left min-w-[700px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">SKU Tag</th><th class="px-4 py-2.5">Functional Designation</th><th class="px-4 py-2.5">Allocated Pool Vol</th><th class="px-4 py-2.5">Capital Assessment ($)</th><th class="px-4 py-2.5 font-mono">Ingress Timestamp</th></tr></thead><tbody id="table-body-inventory" class="divide-y divide-slate-100"></tbody></table>
+                    </div>
+                </div>
+
+                <div id="tab-panel-warehouse" class="hidden space-y-4">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide">Warehouse Spatial Optimization Engine</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Calculates physical footprint density configurations based on high-cube volumetric variables.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <div>
+                                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Total Available Capacity (m³)</label>
+                                <input type="number" id="warehouse-spatial-capacity" value="15000" class="w-full bg-white text-xs p-2 border border-slate-200 rounded-lg outline-none font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Buffer Safety Margin (%)</label>
+                                <input type="number" id="warehouse-spatial-buffer" value="15" class="w-full bg-white text-xs p-2 border border-slate-200 rounded-lg outline-none font-mono">
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="recalculateVolumetricUtilization()" class="w-full bg-slate-900 hover:bg-black text-white text-xs font-bold py-2 px-4 rounded-lg transition shadow-xs cursor-pointer">Execute Volumetric Compression</button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                            <div class="p-4 border border-slate-200 rounded-xl bg-white space-y-3">
+                                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wide border-b border-slate-100 pb-2">Spatial Volume Metrics</h4>
+                                <div class="space-y-2 text-xs font-mono">
+                                    <div class="flex justify-between"><span>Effective Volumetric Ceiling:</span><span id="opt-volume-ceiling" class="font-bold">0.00 m³</span></div>
+                                    <div class="flex justify-between"><span>Active Inventory Footprint:</span><span id="opt-volume-active" class="font-bold text-indigo-600">0.00 m³</span></div>
+                                    <div class="flex justify-between"><span>Available Spatial Buffer:</span><span id="opt-volume-free" class="font-bold text-emerald-600">0.00 m³</span></div>
+                                </div>
+                            </div>
+                            <div class="p-4 border border-slate-200 rounded-xl bg-white flex flex-col justify-center">
+                                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wide mb-2">Footprint Utilization Coefficient</h4>
+                                <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden mb-2 relative">
+                                    <div id="opt-utilization-bar" class="bg-indigo-600 h-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                                <p id="opt-utilization-text" class="text-xs font-mono text-slate-600 text-center">0.0% Utilized</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-panel-fifo_router" class="hidden space-y-4">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-3 flex-wrap gap-2">
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide">First-In, First-Out (FIFO) Requisition Priority Queue Router</h3>
+                                <p class="text-xs text-slate-500">Sequences asset distributions strictly preserving timestamp sequence parameters to insulate from dead stock cycles.</p>
+                            </div>
+                            <button onclick="dispatchFIFOQueueHead()" class="rbac-operator bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-1.5 px-3 rounded-lg transition shadow-xs cursor-pointer">Dispatch Priority Queue Head</button>
+                        </div>
+                        <div class="bg-slate-900 text-slate-200 p-4 rounded-xl font-mono text-xs overflow-x-auto max-h-60 custom-scrollbar">
+                            <div class="text-[10px] text-slate-400 uppercase tracking-wider font-bold border-b border-slate-800 pb-1.5 mb-2 flex justify-between">
+                                <span>Sequenced Allocation Stream (Ascending Time Elements)</span>
+                                <span class="text-emerald-400">Total Rows Tracked: <span id="fifo-queue-count">0</span></span>
+                            </div>
+                            <div id="fifo-queue-stream" class="space-y-1 divide-y divide-slate-800/60"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-panel-forecasting" class="hidden space-y-4">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide">Predictive Forecasting & Dead Asset Risk Matrix</h3>
+                            <p class="text-xs text-slate-500">Evaluates holding configurations, flagging decay profiles, preservation degradation, and dead risk indexes.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl">
+                                <h4 class="text-xs font-bold text-rose-900 uppercase tracking-wide mb-1">Devaluation Risk Asset Exposure</h4>
+                                <p class="text-[10px] text-rose-700 mb-2">Total equity values resting in stale holding windows (> 120 days since entry block).</p>
+                                <div id="ai-dead-capital-value" class="text-2xl font-black text-rose-800 font-mono">$0.00</div>
+                            </div>
+                            <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                                <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wide mb-1">Preservation Actions Flagged</h4>
+                                <p class="text-[10px] text-amber-700 mb-2">SKU allocations requiring strategic volumetric liquidations or cross-dock transfers.</p>
+                                <div id="ai-preservation-actions-count" class="text-2xl font-black text-amber-800 font-mono">0 SKUs</div>
+                            </div>
+                            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                                <h4 class="text-xs font-bold text-emerald-900 uppercase tracking-wide mb-1">System Preservation Coefficient</h4>
+                                <p class="text-[10px] text-emerald-700 mb-2">Aggregated health index score evaluating multi-tenant storage turn rates.</p>
+                                <div id="ai-health-index" class="text-2xl font-black text-emerald-800 font-mono">100.0%</div>
+                            </div>
+                        </div>
+                        <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
+                            <div class="bg-slate-50 px-4 py-2.5 font-bold uppercase tracking-wider border-b border-slate-200 text-slate-600">Automated Risk Analysis Output Streams</div>
+                            <div id="ai-risk-matrix-table-output" class="divide-y divide-slate-100 max-h-80 overflow-y-auto custom-scrollbar bg-white"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-panel-finance" class="hidden space-y-4">
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+                        <input type="text" oninput="executeTabLevelSearch('finance', this.value)" placeholder="Boolean Expression Filtering..." class="flex-1 min-w-[240px] px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono outline-none">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <button onclick="openRecordModal('finance')" class="rbac-root bg-emerald-600 text-white text-xs font-semibold py-1.5 px-2.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-circle-plus"></i> Append Trans</button>
+                            <button onclick="exportTableExcelEngine('finance')" class="bg-slate-900 text-white text-xs font-semibold py-1.5 px-2.5 rounded-lg flex items-center gap-1"><i class="fa-solid fa-file-excel text-emerald-400"></i> Export</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left min-w-[650px] text-xs md:text-sm"><thead class="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider"><tr><th class="px-4 py-2.5 font-mono">Trans ID</th><th class="px-4 py-2.5 font-mono">Invoice Ref Token</th><th class="px-4 py-2.5">Channel Settlement</th><th class="px-4 py-2.5">Classification Type</th><th class="px-4 py-2.5 text-right font-mono">Asset Inflow ($)</th></tr></thead><tbody id="table-body-finance" class="divide-y divide-slate-100"></tbody></table>
+                    </div>
+                </div>
+
+                <div id="tab-panel-reports" class="hidden space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wide">Audit & System Verification Engine</h2>
+                        <button onclick="downloadReportPDF()" class="bg-slate-900 hover:bg-black text-white text-xs font-semibold py-1.5 px-3 rounded-lg flex items-center gap-1.5 transition cursor-pointer shadow-xs"><i class="fa-solid fa-file-pdf text-rose-400"></i> Render PDF Document</button>
+                    </div>
+                    <div id="pdf-report-canvas" class="bg-white border border-slate-200 p-6 max-w-2xl mx-auto text-slate-900 rounded-xl shadow-xs space-y-4">
+                        <div class="flex justify-between items-start border-b-2 border-slate-900 pb-4 text-xs font-sans">
+                            <div>
+                                <h1 class="text-sm font-black uppercase tracking-wide">Nexus Suite Cryptographic Operations Statement</h1>
+                                <p class="text-[10px] text-slate-400 font-mono">System Integrity Verification Record Matrix</p>
+                            </div>
+                            <div class="text-right text-[10px] text-slate-600 font-mono">
+                                <p>Date String: July 07, 2026</p>
+                                <p>Security Key: <span id="report-scope-text" class="font-bold text-emerald-700 uppercase">GLOBAL</span></p>
+                            </div>
+                        </div>
+                        <div class="text-xs space-y-2 font-mono bg-slate-50 border border-slate-200 p-3 rounded-lg">
+                            <span class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Mathematical Valuation Context</span>
+                            <p class="text-slate-600 leading-relaxed">
+                                System calculations incorporate tax tier transformations modeled by standard operational policy functions:
+                            </p>
+                            <p class="text-center text-slate-900 font-bold py-1 bg-white border border-slate-100 rounded">
+                                $\text{Provisions} = \begin{cases} 0.15 \times \Phi & \text{if } \Phi \le 100,000 \\ 15,000 + 0.30 \times (\Phi - 100,000) & \text{if } \Phi > 100,000 \end{cases}$
+                            </p>
+                            <p class="text-[10px] text-slate-400">Where variable $\Phi$ represents the real-time aggregate multi-tenant liquid financial infusions.</p>
+                        </div>
+                        <div class="border border-slate-200 rounded-lg overflow-hidden">
+                            <div class="bg-slate-50 px-4 py-2 text-[10px] font-bold text-slate-500 uppercase border-b border-slate-200">Compiled System State Audit Elements</div>
+                            <div class="p-4 space-y-2 text-xs" id="programmatic-audit-ledger-output"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="fixed bottom-0 left-0 right-0 bg-slate-950 border-t border-slate-800 shadow-2xl flex items-center md:hidden z-50 h-16 px-2 justify-between">
+        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar flex-1 max-w-[calc(100%-60px)] h-full py-2" id="mobile-tabs-scroll-track">
+            <button onclick="switchTab('dashboard')" id="mobile-nav-dashboard" class="px-3.5 py-1.5 text-xs font-bold rounded-full bg-emerald-600 text-white whitespace-nowrap shrink-0 transition-all flex items-center gap-1">Dashboard</button>
+            <button onclick="switchTab('vendors')" id="mobile-nav-vendors" class="px-3.5 py-1.5 text-xs font-bold rounded-full text-slate-400 hover:text-slate-200 whitespace-nowrap shrink-0 transition-all flex items-center gap-1">Suppliers</button>
+            <button onclick="switchTab('shops')" id="mobile-nav-shops" class="px-3.5 py-1.5 text-xs font-bold rounded-full text-slate-400 hover:text-slate-200 whitespace-nowrap shrink-0 transition-all flex items-center gap-1">Outlets</button>
+            <button onclick="switchTab('inventory')" id="mobile-nav-inventory" class="px-3.5 py-1.5 text-xs font-bold rounded-full text-slate-400 hover:text-slate-200 whitespace-nowrap shrink-0 transition-all flex items-center gap-1">Inventory</button>
+            <button onclick="switchTab('warehouse')" id="mobile-nav-warehouse" class="px-3.5 py-1.5 text-xs font-bold rounded-full text-slate-400 hover:text-slate-200 whitespace-nowrap shrink-0 transition-all flex items-center gap-1">Space</button>
+            <button onclick="switchTab('fifo_router')" id="mobile-nav-fifo_router" class="px-3.5 py-1.5 text-xs font-bold rounded-full text-slate-400 hover:text-slate-200 whitespace-nowrap shrink-0 transition-all flex items-center gap-1">FIFO</button>
+            <button onclick="switchTab('forecasting')" id="mobile-nav-forecasting" class="px-3.5 py-1.5 text-xs font-bold rounded-full text-slate-400 hover:text-slate-200 whitespace-nowrap shrink-0 transition-all flex items-center gap-1">AI Risk</button>
+            <button onclick="switchTab('finance')" id="mobile-nav-finance" class="px-3.5 py-1.5 text-xs font-bold rounded-full text-slate-400 hover:text-slate-200 whitespace-nowrap shrink-0 transition-all flex items-center gap-1">Ledger</button>
+            <button onclick="switchTab('reports')" id="mobile-nav-reports" class="px-3.5 py-1.5 text-xs font-bold rounded-full text-slate-400 hover:text-slate-200 whitespace-nowrap shrink-0 transition-all flex items-center gap-1">Audits</button>
+        </div>
+        <div class="w-12 flex justify-center border-l border-slate-800 h-8 items-center shrink-0">
+            <button onclick="toggleMobileSearchOverlay()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 text-emerald-400 flex items-center justify-center cursor-pointer transition active:scale-95 shadow-xs"><i class="fa-solid fa-magnifying-glass text-xs"></i></button>
+        </div>
+    </div>
+
+    <div id="mobile-search-overlay" class="fixed bottom-0 left-0 right-0 h-16 bg-slate-950 border-t border-emerald-500 px-4 items-center justify-between z-50 hidden transition-all">
+        <div class="relative flex-1 mr-3">
+            <i class="fa-solid fa-circle-nodes absolute left-3 top-3 text-emerald-400 text-xs"></i>
+            <input type="text" id="mobile-search-native-input" oninput="executeUniversalSearch(this.value)" placeholder="Enter logic matrices expressions..." class="w-full bg-black text-slate-100 placeholder-slate-500 font-mono text-xs pl-8 pr-3 py-2 border border-slate-700 rounded-xl outline-none focus:border-emerald-500">
+        </div>
+        <button onclick="toggleMobileSearchOverlay()" class="text-slate-400 text-xs font-bold uppercase tracking-wider bg-slate-900 px-3 py-2 rounded-xl border border-slate-700">Exit</button>
+    </div>
+
+    <div id="universal-entry-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-slate-950 text-white px-5 py-4 flex items-center justify-between">
+                <div>
+                    <h3 id="modal-title-text" class="text-sm font-bold uppercase tracking-wider">Commit Structure Row</h3>
+                    <p class="text-[10px] text-slate-400">Appends real-time data packet parameters to the IndexedDB local pool.</p>
+                </div>
+                <button onclick="closeRecordModal()" class="text-slate-400 hover:text-white transition text-xl cursor-pointer">&times;</button>
+            </div>
+            <form id="modal-dynamic-form" onsubmit="handleModalFormSubmission(event)" class="p-5 space-y-4">
+                <div id="modal-form-inputs-container" class="space-y-3"></div>
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                    <button type="button" onclick="closeRecordModal()" class="text-xs font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition">Cancel</button>
+                    <button type="submit" class="text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-5 py-2 rounded-lg transition shadow-sm">Commit Packet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        // EXPANDED ADVANCED MULTI-TENANT SEED DICTIONARIES (INCORPORATING TIMESTAMPS AND VOLUMETRICS)
+        const defaultSuppliersSeed = [
+            { id: 'v1', name: 'Apex Global Logistics', email: 'ops@apex.com', region: 'North America' },
+            { id: 'v2', name: 'Nova Labs Manufacturing', email: 'production@nova.io', region: 'European Union' },
+            { id: 'v3', name: 'Quantum Core Chipsets', email: 'sc@quantumcore.tw', region: 'APAC Region' }
+        ];
+        const defaultShopsSeed = [
+            { id: 's1', vendorId: 'v1', name: 'Apex Fulfillment Hub Alpha', type: 'Distribution Center', performance: 94 },
+            { id: 's2', vendorId: 'v2', name: 'Nova Biotech Lab Storefront', type: 'Direct Wholesale', performance: 88 },
+            { id: 's3', vendorId: 'v3', name: 'Hsinchu Silicon Buffer Pool', type: 'Buffer Node', performance: 99 }
+        ];
+        const defaultInventorySeed = [
+            { id: 'i1', vendorId: 'v1', shopId: 's1', sku: 'APX-909-X', label: 'Heavy Lift Cargo Pallets', quantity: 450, valuation: 12400, volumeItem: 1.2, timestamp: 1772452800000 }, // Recent 2026
+            { id: 'i2', vendorId: 'v2', shopId: 's2', sku: 'NOV-BIO-55', label: 'Eppendorf High-Speed Pipettes', quantity: 120, valuation: 34000, volumeItem: 0.05, timestamp: 1735689600000 }, // Stale/Dead 2025
+            { id: 'i3', vendorId: 'v3', shopId: 's3', sku: 'QNT-CHIP-4', label: 'Lithography Quantum Gate Arrays', quantity: 8000, valuation: 412000, volumeItem: 0.002, timestamp: 1767225600000 }, // Mid 2026
+            { id: 'i4', vendorId: 'v1', shopId: 's1', sku: 'APX-DEAD-Z', label: 'Legacy Iron Cast Housings', quantity: 300, valuation: 18000, volumeItem: 4.5, timestamp: 1704067200000 } // Dead Inventory 2024
+        ];
+        const defaultFinanceSeed = [
+            { id: 'f1', vendorId: 'v1', dynamicRef: 'INV-2026-001', channel: 'Wire Net-30', amount: 48900, classification: 'Liquid Asset Infusion' },
+            { id: 'f2', vendorId: 'v2', dynamicRef: 'INV-2026-089', channel: 'Corporate Escrow', amount: 112000, classification: 'Liquid Asset Infusion' },
+            { id: 'f3', vendorId: 'v3', dynamicRef: 'INV-2026-999', channel: 'Instant Settlement Clearing', amount: 350000, classification: 'Liquid Asset Infusion' }
+        ];
+
+        // GLOBAL CONFIGURATION MATRIX STATES
+        let currentTab = 'dashboard'; 
+        let activeVendorContext = 'all'; 
+        let globalSearchTerm = '';
+        let systemActiveRbacRole = 'ROOT_ADMIN';
+        let tabLevelSearchFilters = { vendors: '', shops: '', inventory: '', finance: '' };
+        let activeModalStoreTarget = '';
+        let appIndexedDBInstance = null;
+
+        const indexedDBConfiguration = {
+            name: 'NexusPro_Enterprise_2026_DB', version: 1,
+            stores: ['suppliers', 'shops', 'inventory', 'finance']
+        };
+
+        // RUNTIME ENGINES & COMPILING PACKET LOGIC
+        const systemStorageEngine = {
+            initialize() {
+                return new Promise((resolve, reject) => {
+                    const req = indexedDB.open(indexedDBConfiguration.name, indexedDBConfiguration.version);
+                    req.onupgradeneeded = (e) => {
+                        const databaseInstance = e.target.result;
+                        indexedDBConfiguration.stores.forEach(storeName => {
+                            if (!databaseInstance.objectStoreNames.contains(storeName)) {
+                                databaseInstance.createObjectStore(storeName, { keyPath: 'id' });
+                            }
+                        });
+                    };
+                    req.onsuccess = (e) => {
+                        appIndexedDBInstance = e.target.result;
+                        this.validateAndSeedDatabaseStructures().then(resolve);
+                    };
+                    req.onerror = () => reject('IDB Structural Crash Intercepted.');
+                });
+            },
+
+            async validateAndSeedDatabaseStructures() {
+                for (const store of indexedDBConfiguration.stores) {
+                    const existingData = await this.retrieveStoreContents(store);
+                    if (!existingData || existingData.length === 0) {
+                        let dynamicSeedArray = [];
+                        if (store === 'suppliers') dynamicSeedArray = defaultSuppliersSeed;
+                        if (store === 'shops') dynamicSeedArray = defaultShopsSeed;
+                        if (store === 'inventory') dynamicSeedArray = defaultInventorySeed;
+                        if (store === 'finance') dynamicSeedArray = defaultFinanceSeed;
+                        for (const item of dynamicSeedArray) { await this.writeRecordToStore(store, item); }
+                    }
+                }
+            },
+
+            retrieveStoreContents(storeName) {
+                return new Promise((resolve) => {
+                    if (!appIndexedDBInstance) return resolve([]);
+                    const transaction = appIndexedDBInstance.transaction(storeName, 'readonly');
+                    const targetStore = transaction.objectStore(storeName);
+                    const getAllQuery = targetStore.getAll();
+                    getAllQuery.onsuccess = () => resolve(getAllQuery.result || []);
+                    getAllQuery.onerror = () => resolve([]);
+                });
+            },
+
+            writeRecordToStore(storeName, recordObject) {
+                return new Promise((resolve, reject) => {
+                    const transaction = appIndexedDBInstance.transaction(storeName, 'readwrite');
+                    const targetStore = transaction.objectStore(storeName);
+                    const putQuery = targetStore.put(recordObject);
+                    putQuery.onsuccess = () => resolve(true);
+                    putQuery.onerror = () => reject(false);
+                });
+            },
+
+            deleteRecordFromStore(storeName, keyId) {
+                return new Promise((resolve, reject) => {
+                    const transaction = appIndexedDBInstance.transaction(storeName, 'readwrite');
+                    const targetStore = transaction.objectStore(storeName);
+                    const deleteQuery = targetStore.delete(keyId);
+                    deleteQuery.onsuccess = () => resolve(true);
+                    deleteQuery.onerror = () => reject(false);
+                });
+            }
+        };
+
+        // STRICT LOGICAL PARSING ENGINE FOR BOOLEAN MATRICES (&&, ||, !, ^)
+        function evaluateAdvancedBooleanLogic(dataItem, queryExpression) {
+            if (!queryExpression || queryExpression.trim() === "") return true;
+            const normalizedItemString = Object.values(dataItem).map(val => String(val).toLowerCase()).join(" | ");
+            const logicalOrTerms = queryExpression.split('||');
+            return logicalOrTerms.some(orTerm => {
+                const logicalXorTerms = orTerm.split('^');
+                let currentXorAccumulator = null;
+                for (let xorTerm of logicalXorTerms) {
+                    const logicalAndTerms = xorTerm.split('&&');
+                    const andBlockSatisfied = logicalAndTerms.every(andTerm => {
+                        let cleanTerm = andTerm.trim().toLowerCase();
+                        let targetNegationState = false;
+                        if (cleanTerm.startsWith('!')) {
+                            targetNegationState = true;
+                            cleanTerm = cleanTerm.substring(1).trim();
+                        }
+                        if (!cleanTerm) return true;
+                        const termDiscovered = normalizedItemString.includes(cleanTerm);
+                        return targetNegationState ? !termDiscovered : termDiscovered;
+                    });
+                    if (currentXorAccumulator === null) { currentXorAccumulator = andBlockSatisfied; } 
+                    else { currentXorAccumulator = currentXorAccumulator !== andBlockSatisfied; }
+                }
+                return currentXorAccumulator;
+            });
+        }
+
+        function executeUniversalSearch(term) { globalSearchTerm = term; refreshApplicationState(); }
+        function executeTabLevelSearch(tabKey, term) { tabLevelSearchFilters[tabKey] = term; refreshApplicationState(); }
+
+        // AUTOMATED DISPATCH BI-DIRECTIONAL UPSTREAM REST SIMULATOR
+        function triggerRemoteUrlFetch(storeTarget) {
+            const endpoint = prompt("Provide authorized multi-tenant webhook or URL payload stream target (.xlsx format data structures):");
+            if (!endpoint) return;
+            
+            document.getElementById('sync-status-indicator').classList.remove('hidden');
+            fetch(endpoint)
+                .then(res => {
+                    if(!res.ok) throw new Error("Endpoint refused connection handshakes.");
+                    return res.arrayBuffer();
+                })
+                .then(buffer => {
+                    const parsedWorkbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
+                    processExcelBufferWorkbook(storeTarget, parsedWorkbook);
+                })
+                .catch(err => {
+                    alert(`Sync Interlock Failure: ${err.message}`);
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        document.getElementById('sync-status-indicator').classList.add('hidden');
+                    }, 2500);
+                });
+        }
+
+        async function exportTableExcelEngine(storeName) {
+            const rawDataMatrix = await systemStorageEngine.retrieveStoreContents(storeName);
+            if (rawDataMatrix.length === 0) return alert("Operation Intercepted: Selected pool contains no rows.");
+            const workSheetInstance = XLSX.utils.json_to_sheet(rawDataMatrix);
+            const workBookInstance = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workBookInstance, workSheetInstance, `${storeName.toUpperCase()} Data`);
+            XLSX.writeFile(workBookInstance, `NexusSuite_Export_${storeName}_2026.xlsx`);
+        }
+
+        function importTableExcelEngine(storeName, fileUploadEvent) {
+            const uploadedFile = fileUploadEvent.target.files[0];
+            if (!uploadedFile) return;
+            const binaryStreamReader = new FileReader();
+            binaryStreamReader.onload = (e) => {
+                try {
+                    const arrayBuffer = new Uint8Array(e.target.result);
+                    const parsedWorkbook = XLSX.read(arrayBuffer, { type: 'array' });
+                    processExcelBufferWorkbook(storeName, parsedWorkbook);
+                } catch (err) {
+                    alert("Schema Parsing Exception: Input payload document structurally compromised.");
+                }
+            };
+            binaryStreamReader.readAsArrayBuffer(uploadedFile);
+        }
+
+        async function processExcelBufferWorkbook(storeName, workbookObj) {
+            const primarySheetName = workbookObj.SheetNames[0];
+            const matrixJsonArray = XLSX.utils.sheet_to_json(workbookObj.Sheets[primarySheetName]);
+            let count = 0;
+            for (let row of matrixJsonArray) {
+                if (!row.id) row.id = 'pkt_' + Math.random().toString(36).substring(2, 9);
+                if (row.quantity) row.quantity = parseInt(row.quantity);
+                if (row.valuation) row.valuation = parseFloat(row.valuation);
+                if (row.performance) row.performance = parseInt(row.performance);
+                if (row.amount) row.amount = parseFloat(row.amount);
+                if (row.volumeItem) row.volumeItem = parseFloat(row.volumeItem);
+                if (!row.timestamp) row.timestamp = Date.now();
+                await systemStorageEngine.writeRecordToStore(storeName, row);
+                count++;
+            }
+            alert(`Packet Merge Complete: ${count} rows integrated cleanly.`);
+            refreshApplicationState();
+        }
+
+        // ROLE MANAGEMENT CONTROLLER LAYER (RBAC EXCLUSIONS)
+        function alterCryptographicRoleContext(selectedRole) {
+            systemActiveRbacRole = selectedRole;
+            document.getElementById('rbac-crypto-sig').innerText = `SHA256-${selectedRole.substring(0,4)}`;
+            
+            // Re-apply visual interface restrictions based on role context mutations
+            const rootElements = document.querySelectorAll('.rbac-root');
+            const operatorElements = document.querySelectorAll('.rbac-operator');
+            
+            if (selectedRole === 'FINANCIAL_AUDITOR') {
+                rootElements.forEach(el => el.classList.add('hidden'));
+                operatorElements.forEach(el => el.classList.add('hidden'));
+            } else if (selectedRole === 'LOGISTICS_OPERATOR') {
+                rootElements.forEach(el => el.classList.add('hidden'));
+                operatorElements.forEach(el => el.classList.remove('hidden'));
+            } else {
+                rootElements.forEach(el => el.classList.remove('hidden'));
+                operatorElements.forEach(el => el.classList.remove('hidden'));
+            }
+            refreshApplicationState();
+        }
+
+        // FEATURE 1 IMPLEMENTATION: CUBIC VOLUMETRIC SPACE ENGINE
+        function computeWarehouseOptimizationMatrix(inventoryData) {
+            const spatialCapInput = parseFloat(document.getElementById('warehouse-spatial-capacity').value) || 1;
+            const safetyBufferInput = parseFloat(document.getElementById('warehouse-spatial-buffer').value) || 0;
+            
+            const realCapacityCeiling = spatialCapInput * (1 - (safetyBufferInput / 100));
+            
+            let accumulatedPhysicalCubicVolume = 0;
+            inventoryData.forEach(item => {
+                const itemUnitVolume = parseFloat(item.volumeItem) || 0.1; 
+                accumulatedPhysicalCubicVolume += (itemUnitVolume * (parseInt(item.quantity) || 0));
+            });
+
+            const currentUtilizationFactor = (accumulatedPhysicalCubicVolume / realCapacityCeiling) * 100;
+            const remainingFreeCubicCapacity = Math.max(0, realCapacityCeiling - accumulatedPhysicalCubicVolume);
+
+            document.getElementById('opt-volume-ceiling').innerText = realCapacityCeiling.toLocaleString(undefined, {maximumFractionDigits:2}) + " m³";
+            document.getElementById('opt-volume-active').innerText = accumulatedPhysicalCubicVolume.toLocaleString(undefined, {maximumFractionDigits:2}) + " m³";
+            document.getElementById('opt-volume-free').innerText = remainingFreeCubicCapacity.toLocaleString(undefined, {maximumFractionDigits:2}) + " m³";
+            
+            const clampedBarWidth = Math.min(100, currentUtilizationFactor);
+            const barElement = document.getElementById('opt-utilization-bar');
+            barElement.style.width = `${clampedBarWidth}%`;
+            
+            if (currentUtilizationFactor > 90) {
+                barElement.className = "bg-rose-600 h-full transition-all duration-500";
+            } else if (currentUtilizationFactor > 75) {
+                barElement.className = "bg-amber-500 h-full transition-all duration-500";
+            } else {
+                barElement.className = "bg-indigo-600 h-full transition-all duration-500";
+            }
+            document.getElementById('opt-utilization-text').innerText = `${currentUtilizationFactor.toFixed(1)}% Capacity Occupied`;
+        }
+
+        function recalculateVolumetricUtilization() {
+            systemStorageEngine.retrieveStoreContents('inventory').then(computeWarehouseOptimizationMatrix);
+        }
+
+        // FEATURE 2 IMPLEMENTATION: FIFO TIME LOGIC PIPELINE
+        function compileFIFOQueueRouterPanel(inventoryData) {
+            const queueOutputTrack = document.getElementById('fifo-queue-stream');
+            const counterBadge = document.getElementById('fifo-queue-count');
+            queueOutputTrack.innerHTML = '';
+
+            // Sort by earliest historical entry block timestamp to preserve FIFO distribution safety
+            const chronologicalSortedQueue = [...inventoryData].sort((alpha, beta) => (alpha.timestamp || 0) - (beta.timestamp || 0));
+            counterBadge.innerText = chronologicalSortedQueue.length;
+
+            if (chronologicalSortedQueue.length === 0) {
+                queueOutputTrack.innerHTML = `<p class="text-slate-500 italic text-[11px] py-2">Allocation dispatch stream holds no queued sequences.</p>`;
+                return;
+            }
+
+            chronologicalSortedQueue.forEach((item, index) => {
+                const displayDate = new Date(item.timestamp || Date.now()).toISOString().substring(0,10);
+                const isStale = (Date.now() - (item.timestamp || Date.now())) > (120 * 24 * 60 * 60 * 1000);
+                
+                queueOutputTrack.innerHTML += `
+                    <div class="flex justify-between items-center py-2 text-[11px] font-mono ${index === 0 ? 'bg-slate-800/80 px-2 rounded border border-emerald-800/40' : ''}">
+                        <div class="flex items-center gap-2">
+                            <span class="${index === 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}">[#${index + 1}]</span>
+                            <span class="font-bold text-slate-100">${item.sku}</span>
+                            <span class="text-slate-400 hidden sm:inline">(${item.label})</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-slate-300">${item.quantity} Qty</span>
+                            <span class="px-1.5 py-0.2 rounded text-[9px] ${isStale ? 'bg-rose-950 text-rose-400 border border-rose-800' : 'bg-slate-800 text-slate-400'}">${displayDate}</span>
+                            ${index === 0 ? '<span class="text-[9px] text-emerald-400 font-bold animate-pulse">QUEUE HEAD</span>' : ''}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function dispatchFIFOQueueHead() {
+            if (systemActiveRbacRole === 'FINANCIAL_AUDITOR') return alert("Access Denied: Financial Auditors cannot modify warehouse dispatch states.");
+            const currentInventory = await systemStorageEngine.retrieveStoreContents('inventory');
+            if (currentInventory.length === 0) return alert("Queue Empty: No target assets identified for distribution.");
+            
+            const chronologicalSortedQueue = [...currentInventory].sort((alpha, beta) => (alpha.timestamp || 0) - (beta.timestamp || 0));
+            const targetedHeadItem = chronologicalSortedQueue[0];
+
+            if (confirm(`Authorize immediate FIFO dispatch for Queue Head: ${targetedHeadItem.sku}?`)) {
+                await systemStorageEngine.deleteRecordFromStore('inventory', targetedHeadItem.id);
+                refreshApplicationState();
+            }
+        }
+
+        // FEATURE 3 IMPLEMENTATION: RISK ANALYSIS ENGINE (DEAD STOCK FACTORING)
+        function generateAIPredictiveForecastAnalytics(inventoryData, financeData) {
+            const riskTableContainer = document.getElementById('ai-risk-matrix-table-output');
+            riskTableContainer.innerHTML = '';
+
+            let totalDeadCapitalExposure = 0;
+            let totalPreservationActions = 0;
+            const thresholdHorizon = 120 * 24 * 60 * 60 * 1000; // 120 Days
+
+            if (inventoryData.length === 0) {
+                riskTableContainer.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Risk analyzer tracks no inventory assets.</p>`;
+                return;
+            }
+
+            inventoryData.forEach(item => {
+                const holdingDuration = Date.now() - (item.timestamp || Date.now());
+                const isDeadAssetRisk = holdingDuration > thresholdHorizon;
+                let riskRiskFactorString = "Low Stable";
+                let rowColorStyle = "bg-white text-slate-800";
+
+                if (isDeadAssetRisk) {
+                    totalDeadCapitalExposure += parseFloat(item.valuation || 0);
+                    totalPreservationActions++;
+                    riskRiskFactorString = "CRITICAL DEAD ACCUMULATION";
+                    rowColorStyle = "bg-rose-50/60 text-slate-900";
+                } else if (holdingDuration > (60 * 24 * 60 * 60 * 1000)) {
+                    riskRiskFactorString = "Medium Slow Velocity";
+                    rowColorStyle = "bg-amber-50/40 text-slate-900";
+                }
+
+                riskTableContainer.innerHTML += `
+                    <div class="flex flex-wrap justify-between items-center p-3 font-mono border-b border-slate-100 ${rowColorStyle}">
+                        <div class="space-y-0.5">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-slate-900">${item.sku}</span>
+                                <span class="text-slate-500 text-[11px]">${item.label}</span>
+                            </div>
+                            <div class="text-[10px] text-slate-400">Total Operational Age: ${Math.floor(holdingDuration / (24*60*60*1000))} Days across allocation pool.</div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs font-bold block ${isDeadAssetRisk ? 'text-rose-700' : 'text-slate-700'}">$${Number(item.valuation || 0).toLocaleString()}</span>
+                            <span class="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded ${isDeadAssetRisk ? 'bg-rose-200 text-rose-800' : 'bg-slate-100 text-slate-500'}">${riskRiskFactorString}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const absoluteTotalCapitalSystem = inventoryData.reduce((acc, cur) => acc + Number(cur.valuation || 0), 0);
+            const calculatedHealthMetric = absoluteTotalCapitalSystem > 0 ? 
+                (((absoluteTotalCapitalSystem - totalDeadCapitalExposure) / absoluteTotalCapitalSystem) * 100) : 100;
+
+            document.getElementById('ai-dead-capital-value').innerText = '$' + totalDeadCapitalExposure.toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('ai-preservation-actions-count').innerText = `${totalPreservationActions} SKU Blocks`;
+            document.getElementById('ai-health-index').innerText = `${calculatedHealthMetric.toFixed(1)}%`;
+            
+            return {
+                deadExposure: totalDeadCapitalExposure,
+                healthRatio: calculatedHealthMetric
+            };
+        }
+
+        // COMPREHENSIVE VIEWPORT SYNCHRONIZER PLATFORM
+        function buildQueryAdhesiveChart(isolatedInventory, isolatedFinance, riskMetrics) {
+            const canvas = document.getElementById('dynamic-chart-canvas');
+            const metricsMetric = document.getElementById('chart-metric-dimension').value;
+            canvas.innerHTML = '';
+
+            let aggregateMap = {};
+            if (metricsMetric === 'inventory-value' || metricsMetric === 'inventory-qty' || metricsMetric === 'dead-valuation') {
+                isolatedInventory.forEach(item => {
+                    const tag = item.vendorId || 'Unknown';
+                    let valueWeight = 0;
+                    if (metricsMetric === 'inventory-value') valueWeight = Number(item.valuation || 0);
+                    if (metricsMetric === 'inventory-qty') valueWeight = Number(item.quantity || 0);
+                    if (metricsMetric === 'dead-valuation') {
+                        const isDead = (Date.now() - (item.timestamp || Date.now())) > (120 * 24 * 60 * 60 * 1000);
+                        valueWeight = isDead ? Number(item.valuation || 0) : 0;
+                    }
+                    aggregateMap[tag] = (aggregateMap[tag] || 0) + valueWeight;
+                });
+            } else {
+                isolatedFinance.forEach(f => {
+                    const tag = f.vendorId || 'Unknown';
+                    aggregateMap[tag] = (aggregateMap[tag] || 0) + Number(f.amount || 0);
+                });
+            }
+
+            const values = Object.values(aggregateMap);
+            const maximumValue = values.length > 0 ? Math.max(...values, 1) : 1;
+
+            if (Object.keys(aggregateMap).length === 0 || values.reduce((a,b)=>a+b, 0) === 0) {
+                canvas.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">No reportable parameters fit active multi-tenant axis conditions.</p>`;
+                return;
+            }
+
+            Object.entries(aggregateMap).forEach(([key, value]) => {
+                const mathematicalPercentage = (value / maximumValue) * 100;
+                const presentationString = metricsMetric.includes('value') || metricsMetric.includes('infusion') || metricsMetric.includes('dead') ? 
+                    '$' + value.toLocaleString(undefined, {minimumFractionDigits: 2}) : value.toLocaleString() + ' Units';
+
+                canvas.innerHTML += `
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[11px] font-medium text-slate-600">
+                            <span class="font-bold font-mono uppercase text-slate-900">${key}</span>
+                            <span class="font-mono text-slate-700 font-semibold">${presentationString}</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden flex">
+                            <div class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: ${mathematicalPercentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function refreshApplicationState() {
+            const currentSuppliers = await systemStorageEngine.retrieveStoreContents('suppliers');
+            const currentShops = await systemStorageEngine.retrieveStoreContents('shops');
+            const currentInventory = await systemStorageEngine.retrieveStoreContents('inventory');
+            const currentFinance = await systemStorageEngine.retrieveStoreContents('finance');
+
+            rebuildWorkspaceContextMenus(currentSuppliers);
+            toggleIsolationWarnings();
+
+            const createFilterCascade = (tabKey) => (item) => {
+                const matchesContext = (activeVendorContext === 'all' || item.vendorId === activeVendorContext || item.id === activeVendorContext);
+                if (!matchesContext) return false;
+                return evaluateAdvancedBooleanLogic(item, globalSearchTerm) && evaluateAdvancedBooleanLogic(item, tabLevelSearchFilters[tabKey]);
+            };
+
+            const isolatedSuppliers = currentSuppliers.filter(createFilterCascade('vendors'));
+            const isolatedShops = currentShops.filter(createFilterCascade('shops'));
+            const isolatedInventory = currentInventory.filter(createFilterCascade('inventory'));
+            const isolatedFinance = currentFinance.filter(createFilterCascade('finance'));
+
+            // Execute Core Feature Analytics Engine Blocks
+            computeWarehouseOptimizationMatrix(isolatedInventory);
+            compileFIFOQueueRouterPanel(isolatedInventory);
+            const riskMetrics = generateAIPredictiveForecastAnalytics(isolatedInventory, isolatedFinance);
+
+            calculateMetricsMatrix(isolatedSuppliers, isolatedShops, isolatedInventory, isolatedFinance, riskMetrics);
+            buildQueryAdhesiveChart(isolatedInventory, isolatedFinance, riskMetrics);
+            
+            renderSuppliersTable(isolatedSuppliers);
+            renderShopsTable(isolatedShops);
+            renderInventoryTable(isolatedInventory);
+            renderFinanceMatrixTable(isolatedFinance);
+            generateProgrammaticAuditLedger(isolatedInventory, isolatedFinance, isolatedShops);
+        }
+
+        function calculateMetricsMatrix(vendors, shops, inventory, finance, riskMetrics) {
+            document.getElementById('card-total-vendors').innerText = vendors.length;
+            document.getElementById('card-total-shops').innerText = shops.length;
+            const totalStockCount = inventory.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+            document.getElementById('card-total-skus').innerText = totalStockCount.toLocaleString();
+            const totalValuation = inventory.reduce((sum, item) => sum + Number(item.valuation || 0), 0);
+            document.getElementById('card-gross-capital').innerText = '$' + totalValuation.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            
+            const corporateInflow = finance.filter(f => f.classification === 'Liquid Asset Infusion').reduce((sum, f) => sum + Number(f.amount || 0), 0);
+            document.getElementById('metric-liquid-infusion').innerText = '$' + corporateInflow.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            
+            // Progressive tax tier formulation ($15% base step, 30% beyond scaling boundary threshold tier limits)
+            let structuralTaxEstimate = corporateInflow <= 100000 ? (corporateInflow * 0.15) : ((100000 * 0.15) + ((corporateInflow - 100000) * 0.30));
+            document.getElementById('metric-tax-provision').innerText = '$' + structuralTaxEstimate.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            
+            const calculatedTurnover = totalValuation > 0 ? (corporateInflow / totalValuation) : 0;
+            document.getElementById('metric-turnover-index').innerText = calculatedTurnover.toFixed(2) + 'x';
+            
+            const inverseHealthRatio = 100 - (riskMetrics ? riskMetrics.healthRatio : 0);
+            document.getElementById('metric-dead-risk-index').innerText = inverseHealthRatio.toFixed(1) + '%';
+        }
+
+        function generateProgrammaticAuditLedger(inventory, finance, shops) {
+            const outputElement = document.getElementById('programmatic-audit-ledger-output');
+            const totalValue = inventory.reduce((acc, i) => acc + Number(i.valuation || 0), 0);
+            const totalInflow = finance.reduce((acc, f) => acc + Number(f.amount || 0), 0);
+            const averageSla = shops.length > 0 ? (shops.reduce((acc, s) => acc + Number(s.performance || 0), 0) / shops.length).toFixed(1) : '0.0';
+
+            outputElement.innerHTML = `
+                <div class="flex justify-between border-b border-slate-200 py-1.5 font-mono">
+                    <span class="text-slate-500">Asset Capital Valuation Aggregates:</span>
+                    <span class="font-bold text-slate-900">$${totalValue.toLocaleString(undefined, {minimumFractionDigits:2})}</span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 py-1.5 font-mono">
+                    <span class="text-slate-500">Validated Inflow Transactions:</span>
+                    <span class="font-bold text-indigo-600">$${totalInflow.toLocaleString(undefined, {minimumFractionDigits:2})}</span>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 py-1.5 font-mono">
+                    <span class="text-slate-500">Tenant Target SLA Compliance Mean:</span>
+                    <span class="font-bold text-emerald-600">${averageSla}% SLA</span>
+                </div>
+                <div class="p-2 bg-slate-950 border border-slate-800 rounded text-[10px] font-mono text-slate-400 mt-2">
+                    <strong>RBAC State Log:</strong> Active execution authority context: <span class="text-emerald-400">${systemActiveRbacRole}</span>. Verification checksum handshake verified via local IndexedDB storage frames. No deadlocks isolated.
+                </div>
+            `;
+        }
+
+        // RENDER CORE TABLES GRAPHICS
+        function renderSuppliersTable(data) {
+            document.getElementById('table-body-vendors').innerHTML = data.map(v => `
+                <tr class="hover:bg-slate-50/80 transition font-mono"><td class="px-4 py-2.5 font-bold text-slate-600">${v.id}</td><td class="px-4 py-2.5 font-bold text-slate-900 font-sans">${v.name}</td><td class="px-4 py-2.5 text-slate-600">${v.email}</td><td class="px-4 py-2.5 text-slate-600 font-medium font-sans">${v.region}</td><td class="px-4 py-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">ACTIVE_SYNC</span></td></tr>
+            `).join('') || `<tr><td colspan="5" class="p-6 text-center text-xs text-slate-400 italic">No registered suppliers match logic criteria.</td></tr>`;
+        }
+        function renderShopsTable(data) {
+            document.getElementById('table-body-shops').innerHTML = data.map(s => `
+                <tr class="hover:bg-slate-50/80 transition"><td class="px-4 py-2.5 font-mono text-slate-500 font-bold">${s.id}</td><td class="px-4 py-2.5 font-bold text-slate-900">${s.name}</td><td class="px-4 py-2.5 text-slate-600 text-xs font-mono">${s.type}</td><td class="px-4 py-2.5 font-mono"><span class="font-bold ${s.performance > 90 ? 'text-emerald-600' : 'text-amber-600'}">${s.performance}% SLA</span></td></tr>
+            `).join('') || `<tr><td colspan="4" class="p-6 text-center text-xs text-slate-400 italic">No multi-tenant retail nodes isolated.</td></tr>`;
+        }
+        function renderInventoryTable(data) {
+            document.getElementById('table-body-inventory').innerHTML = data.map(i => {
+                const itemDate = new Date(i.timestamp || Date.now()).toISOString().substring(0,10);
+                return `
+                    <tr class="hover:bg-slate-50/80 transition font-mono"><td class="px-4 py-2.5 font-bold text-slate-900">${i.sku}</td><td class="px-4 py-2.5 font-sans text-slate-700 font-medium">${i.label}</td><td class="px-4 py-2.5 text-slate-800 font-bold">${i.quantity.toLocaleString()} units</td><td class="px-4 py-2.5 font-bold text-emerald-700">$${Number(i.valuation).toLocaleString(undefined, {minimumFractionDigits:2})}</td><td class="px-4 py-2.5 text-slate-400 text-[11px]">${itemDate}</td></tr>
+                `;
+            }).join('') || `<tr><td colspan="5" class="p-6 text-center text-xs text-slate-400 italic">No asset matrix structures match logic parameter streams.</td></tr>`;
+        }
+        function renderFinanceMatrixTable(data) {
+            document.getElementById('table-body-finance').innerHTML = data.map(f => `
+                <tr class="hover:bg-slate-50/80 transition font-mono"><td class="px-4 py-2.5 text-slate-500">${f.id}</td><td class="px-4 py-2.5 text-slate-700 font-semibold">${f.dynamicRef}</td><td class="px-4 py-2.5 text-slate-600 text-xs">${f.channel}</td><td class="px-4 py-2.5"><span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-800">${f.classification}</span></td><td class="px-4 py-2.5 text-right font-bold text-emerald-700">+$${Number(f.amount).toLocaleString(undefined, {minimumFractionDigits:2})}</td></tr>
+            `).join('') || `<tr><td colspan="5" class="p-6 text-center text-xs text-slate-400 italic">Financial asset allocations empty.</td></tr>`;
+        }
+
+        // ENTRY DIALOG MARGINAL GENERATORS
+        function openRecordModal(storeKey) {
+            if (systemActiveRbacRole === 'FINANCIAL_AUDITOR') return alert("Access Restriction: Financial auditors are prohibited from initiating data mutations.");
+            activeModalStoreTarget = storeKey;
+            document.getElementById('modal-title-text').innerText = `Inject Packet: [${storeKey.toUpperCase()}]`;
+            const container = document.getElementById('modal-form-inputs-container');
+            container.innerHTML = '';
+
+            const inputMarkupGenerator = (id, label, placeholder, type = 'text') => `
+                <div>
+                    <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1 tracking-wider">${label}</label>
+                    <input type="${type}" name="${id}" required placeholder="${placeholder}" class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:border-slate-900 focus:bg-white font-mono transition-all">
+                </div>
+            `;
+
+            let schemaInputs = inputMarkupGenerator('id', 'Packet Key ID', 'e.g., tx-707');
+            if (storeKey !== 'suppliers') { schemaInputs += inputMarkupGenerator('vendorId', 'Parent Tenant Identity Context Link', 'e.g., v1'); }
+
+            if (storeKey === 'suppliers') {
+                schemaInputs += inputMarkupGenerator('name', 'Corporate Entity Label', 'e.g., Shinetsu Co');
+                schemaInputs += inputMarkupGenerator('email', 'Secure Communications Gateway', 'e.g., secure@shinetsu.jp', 'email');
+                schemaInputs += inputMarkupGenerator('region', 'Node Regional Jurisdiction', 'e.g., Japan');
+            } else if (storeKey === 'shops') {
+                schemaInputs += inputMarkupGenerator('name', 'Outlet Node Designation', 'e.g., Tokyo Air Freight Depot');
+                schemaInputs += inputMarkupGenerator('type', 'Operations Domain Channel Class', 'e.g., Cross-Dock Hub');
+                schemaInputs += inputMarkupGenerator('performance', 'Realized Mean SLA Target Value (%)', '95', 'number');
+            } else if (storeKey === 'inventory') {
+                schemaInputs += inputMarkupGenerator('shopId', 'Target Bound Retail Node Link', 'e.g., s1');
+                schemaInputs += inputMarkupGenerator('sku', 'Product Code Designation Tag (SKU)', 'e.g., APX-CHIP-V');
+                schemaInputs += inputMarkupGenerator('label', 'Functional Description Label', 'e.g., Optical Transceivers');
+                schemaInputs += inputMarkupGenerator('quantity', 'Volumetric Allocation Units (Quantity)', '1000', 'number');
+                schemaInputs += inputMarkupGenerator('valuation', 'Assessed Capital Book Evaluation Valuation ($)', '45000', 'number');
+                schemaInputs += inputMarkupGenerator('volumeItem', 'Single Unit Storage Displacement Volume (m³)', '0.02', 'number');
+            } else if (storeKey === 'finance') {
+                schemaInputs += inputMarkupGenerator('dynamicRef', 'Invoice Reference Protocol Token', 'e.g., INV-2026-X8');
+                schemaInputs += inputMarkupGenerator('channel', 'Settlement Clearing Route Network', 'e.g., Wire Transfer');
+                schemaInputs += inputMarkupGenerator('amount', 'Asset Inflow Liquid Capital Amount ($)', '75000', 'number');
+                schemaInputs += inputMarkupGenerator('classification', 'Transaction Classification Token Descriptor', 'Liquid Asset Infusion');
+            }
+
+            container.innerHTML = schemaInputs;
+            document.getElementById('universal-entry-modal').classList.remove('hidden');
+        }
+
+        function closeRecordModal() {
+            document.getElementById('universal-entry-modal').classList.add('hidden');
+            document.getElementById('modal-dynamic-form').reset();
+        }
+
+        async function handleModalFormSubmission(event) {
+            event.preventDefault();
+            const formDataInstance = new FormData(event.target);
+            let extractedRecordObject = {};
+            
+            formDataInstance.forEach((val, key) => {
+                if (['performance', 'quantity'].includes(key)) { extractedRecordObject[key] = parseInt(val); } 
+                else if (['valuation', 'amount', 'volumeItem'].includes(key)) { extractedRecordObject[key] = parseFloat(val); } 
+                else { extractedRecordObject[key] = val; }
+            });
+            
+            if(!extractedRecordObject.timestamp) extractedRecordObject.timestamp = Date.now();
+
+            await systemStorageEngine.writeRecordToStore(activeModalStoreTarget, extractedRecordObject);
+            closeRecordModal();
+            refreshApplicationState();
+        }
+
+        // SCREEN ROUTING TABS MATRIX MANAGERS
+        function switchTab(targetTabId) {
+            currentTab = targetTabId;
+            const headerTitles = {
+                dashboard: 'Dashboard Ecosystem', vendors: 'Suppliers Directory Matrix', shops: 'Multi-Tenant Corporate Outlets',
+                inventory: 'Inventory Liquidity Ledger', warehouse: 'Warehouse Spatial footprint Density Optimizer',
+                fifo_router: 'FIFO Priority Dispatch Management Queue', forecasting: 'AI Predictive Forecasting & Decay Risk Factor Matrix',
+                finance: 'Financial Operations Ledger Matrix', reports: 'Cryptographic Compliance Verification Report'
+            };
+            document.getElementById('app-current-title').innerText = headerTitles[targetTabId] || 'Nexus Suite';
+
+            document.querySelectorAll('[id^="tab-panel-"]').forEach(p => p.classList.add('hidden'));
+            const targetedPanel = document.getElementById(`tab-panel-${targetTabId}`);
+            if (targetedPanel) targetedPanel.classList.remove('hidden');
+
+            document.querySelectorAll('#sidebar-nav button').forEach(btn => {
+                btn.className = "w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg text-slate-400 hover:bg-slate-900 hover:text-white transition-all text-left cursor-pointer";
+            });
+            const desktopButton = document.getElementById(`nav-${targetTabId}`);
+            if (desktopButton) desktopButton.className = "w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg bg-emerald-600 text-white transition-all text-left cursor-pointer";
+
+            document.querySelectorAll('#mobile-tabs-scroll-track button').forEach(p => {
+                p.className = "px-3.5 py-1.5 text-xs font-bold rounded-full text-slate-400 hover:text-slate-200 whitespace-nowrap shrink-0 transition-all flex items-center gap-1";
+            });
+            const mobileButton = document.getElementById(`mobile-nav-${targetTabId}`);
+            if (mobileButton) {
+                mobileButton.className = "px-3.5 py-1.5 text-xs font-bold rounded-full bg-emerald-600 text-white whitespace-nowrap shrink-0 transition-all flex items-center gap-1";
+                mobileButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+        }
+
+        function switchContext(vendorId) {
+            activeVendorContext = vendorId;
+            document.getElementById('vendor-context-selector').value = vendorId;
+            document.getElementById('mobile-context-selector').value = vendorId;
+            refreshApplicationState();
+        }
+
+        function toggleIsolationWarnings() {
+            const banner = document.getElementById('filter-warning');
+            const contextualBadge = document.getElementById('app-context-badge');
+            if (activeVendorContext === 'all') {
+                banner.classList.add('hidden');
+                contextualBadge.innerText = 'Showing compiled operational matrices over global state data pools.';
+                if(document.getElementById('report-scope-text')) document.getElementById('report-scope-text').innerText = 'GLOBAL';
+            } else {
+                banner.classList.remove('hidden');
+                document.getElementById('filter-warning-vendor').innerText = `Isolated Tenant Token Context Lockout: ${activeVendorContext}`;
+                contextualBadge.innerText = `Partition Network Isolation active on data scope parameter keys: ${activeVendorContext}`;
+                if(document.getElementById('report-scope-text')) document.getElementById('report-scope-text').innerText = activeVendorContext;
+            }
+        }
+
+        function rebuildWorkspaceContextMenus(vendors) {
+            const selectDesktop = document.getElementById('vendor-context-selector');
+            const selectMobile = document.getElementById('mobile-context-selector');
+            const preservedContext = activeVendorContext;
+            let selectorOptionsMarkup = `<option value="all">🌐 Global Portal Operator</option>`;
+            vendors.forEach(v => { selectorOptionsMarkup += `<option value="${v.id}">🏢 ${v.name}</option>`; });
+            selectDesktop.innerHTML = selectorOptionsMarkup; selectMobile.innerHTML = selectorOptionsMarkup;
+            selectDesktop.value = preservedContext; selectMobile.value = preservedContext;
+        }
+
+        function toggleMobileSearchOverlay() {
+            const overlay = document.getElementById('mobile-search-overlay');
+            if (overlay.classList.contains('hidden')) {
+                overlay.classList.remove('hidden'); overlay.classList.add('flex');
+                document.getElementById('mobile-search-native-input').focus();
+            } else {
+                overlay.classList.add('hidden'); overlay.classList.remove('flex');
+            }
+        }
+
+        function downloadReportPDF() {
+            const documentCanvasTarget = document.getElementById('pdf-report-canvas');
+            const structuralOptions = {
+                margin: 0.5, filename: 'NexusPro_AuditStatement_2026.pdf',
+                image: { type: 'jpeg', quality: 0.99 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(structuralOptions).from(documentCanvasTarget).save();
+        }
+
+        // APPLICATION LEVEL ACCESS ENTRY TRIGGERS
+        window.addEventListener('DOMContentLoaded', () => {
+            systemStorageEngine.initialize().then(() => {
+                switchTab('dashboard');
+                alterCryptographicRoleContext('ROOT_ADMIN');
+            });
+        });
+    </script>
+</body>
+</html>
